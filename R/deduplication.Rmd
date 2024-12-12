@@ -1,0 +1,33 @@
+---
+title: "deduplication"
+author: "Patrice Pottier"
+date: '2022-10-21'
+output: html_document
+---
+
+# Load relevant packages
+```{r}
+library(litsearchr)
+library(synthesisr)
+```
+
+# Important files
+```{r, Importing files}
+all_results<-import_results(directory="bibliographic_searches/final_searches/all_results_combined")
+all_results<-clean_df(all_results) # Cleans column and author names
+```
+
+# Remove all exact duplicates
+```{r, remove duplicates}
+deduplicated_results <- remove_duplicates(all_results, field="title", method="string_osa") # This method is quite conservative so it may miss some duplicates that can be removed in Rayyan later on.  
+
+final_file<- dplyr::select(deduplicated_results, source_type, title, author, source, abstract, date_generated, year, doi, volume, issue, start_page, end_page, source_abbreviated, language, issn, url, database, keywords)
+
+write_refs(final_file, format="ris", file=TRUE) # Because this function stores the file in the project directly, this file was moved to "/all_results_combined_deduplicated" and renamed as "all_records_deduplicated_evol_repro_temp.ris"
+```
+
+# Package versions
+```{r}
+sessionInfo()
+```
+

@@ -1,0 +1,57 @@
+---
+title: "Splitting files into chuncks for screening"
+author: "Patrice Pottier"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+# Load relevant packages
+```{r}
+library(litsearchr)
+library(synthesisr)
+```
+
+# Import files
+```{r, Importing files}
+file<-import_results(file="bibliographic_searches/final_searches/all_results_combined_deduplicated/all_records_deduplicated_in_Rayyan_evol_repro.ris")
+file<-clean_df(file) # Cleans column and author names
+```
+
+# Split into chuncks of 568 papers (16 people screening)
+```{r}
+n1<- file[1:568,]
+n2<- file[569:1136,]
+n3<- file[1137:1704,]
+n4<- file[1705:2272,]
+n5<- file[2273:2840,]
+n6<- file[2841:3408,]
+n7<- file[3409:3976,]
+n8<- file[3977:4544,]
+n9<- file[4545:5112,]
+n10<- file[5113:5680,]
+n11<- file[5681:6248,]
+n12<- file[6249:6816,]
+n13<- file[6817:7384,]
+n14<- file[7385:7952,]
+n15<- file[7953:8520,]
+n16<- file[8521:9085,]
+
+write_refs(n1, format="ris", file=TRUE) 
+write_refs(n2, format="ris", file=TRUE) 
+write_refs(n3, format="ris", file=TRUE) 
+write_refs(n4, format="ris", file=TRUE) 
+write_refs(n5, format="ris", file=TRUE) 
+write_refs(n6, format="ris", file=TRUE) 
+write_refs(n7, format="ris", file=TRUE) 
+write_refs(n8, format="ris", file=TRUE) 
+write_refs(n9, format="ris", file=TRUE) 
+write_refs(n10, format="ris", file=TRUE) 
+write_refs(n11, format="ris", file=TRUE) 
+write_refs(n12, format="ris", file=TRUE) 
+write_refs(n13, format="ris", file=TRUE) 
+write_refs(n14, format="ris", file=TRUE) 
+write_refs(n15, format="ris", file=TRUE) 
+write_refs(n16, format="ris", file=TRUE) 
+
+```
+

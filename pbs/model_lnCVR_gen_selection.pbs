@@ -1,0 +1,23 @@
+#!/bin/bash
+
+#PBS -N model_lnCVR_gen_selection
+#PBS -l select=1:ncpus=4:mem=25gb
+#PBS -l walltime=24:00:00
+#PBS -M p.pottier@unsw.edu.au
+#PBS -m ae
+
+#Create Katana workspace
+module purge
+
+#Loading R 
+module add r/4.2.2
+module load r/4.2.2
+module load proj/8.2.1
+module load sqlite/3.39.4
+module load udunits/2.2.28
+
+#Navigate to working direction
+cd /srv/scratch/z5288536/Exp_evol_temp
+
+#Run R code
+Rscript R/model_lnCVR_gen_selection.R

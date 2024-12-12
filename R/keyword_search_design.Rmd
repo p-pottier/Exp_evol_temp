@@ -1,0 +1,58 @@
+---
+title: "Search_design"
+author: "Patrice Pottier"
+date: '2022-10-11'
+output: html_document
+---
+
+```{r}
+library(remotes)
+#install_github("elizagrames/litsearchr", ref="main")
+library(litsearchr)
+library(ggraph)
+library(igraph)
+library(tidyverse)
+```
+
+```{r}
+naive_results<-import_results(file="bibliographic_searches/pilot/scopus_naive_search_22_10_12.ris") # Import results
+```
+```{r, get relevant words}
+stopwords<-get_stopwords() # Get stopwords (commonly used words irrelevant here)
+
+## Get words found at three times in keywords, titles, or abstracts. 
+keywords<- extract_terms(keywords=naive_results[, "keywords"], method="tagged", min_freq=3, min_n=1, stopwords=stopwords)
+titles<- extract_terms(keywords=naive_results[, "title"], method="tagged", min_freq=3, min_n=1, stopwords=stopwords)
+abstracts<- extract_terms(keywords=naive_results[, "abstract"], method="tagged", min_freq=3, min_n=1, stopwords=stopwords)
+
+terms<-unique(c(keywords, titles, abstracts))
+```
+
+
+```{r, Network analysis, fig.height=20, fig.width=20}
+docs <- paste(naive_results[, "title"], naive_results[, "abstract"])
+dfm <- create_dfm(elements=docs, features=terms)
+g <- create_network(dfm, min_studies=3)
+
+plot<-ggraph(g, layout="stress") +
+      coord_fixed() +
+      expand_limits(x=c(-3, 3)) +
+     geom_edge_link(aes(alpha=weight)) +
+     geom_node_point(shape="circle filled", fill="white") +
+     geom_node_text(aes(label=name), hjust="outward", check_overlap=TRUE) +
+     guides(edge_alpha=FALSE)
+plot
+```
+
+
+```{r, term importance, fig.width=20, fig.height=10}
+strengths <- strength(g)
+
+data.frame(term=names(strengths), strength=strengths, row.names=NULL) %>%
+  mutate(rank=rank(strength, ties.method="min")) %>%
+  arrange(strength) ->
+  term_strengths
+
+term_strengths
+```
+
