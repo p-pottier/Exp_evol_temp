@@ -1,6 +1,6 @@
 ---
-title: "**Evolution of reproduction, survival, and body size in response to changing temperatures**"
-author: Pottier et al.
+title: "**Evolution of fecundity, survival, and body size in response to changing temperatures**"
+author: Patrice Pottier
 date: "latest update: `r format(Sys.time(), '%d %B %Y')`"
 output: 
   rmdformats::downcute:
@@ -135,7 +135,8 @@ pacman::p_load(tidyverse,
                ggbeeswarm,
                kableExtra,
                ggtree,
-               ggtreeExtra)
+               ggtreeExtra,
+               performance)
 set.seed(234)
 ```
 
@@ -156,6 +157,18 @@ raw_data <- raw_data %>% mutate(select_temp_diff = abs(treatment_temp - control_
 
 # Calculate the temperature difference between assay and control temperature
 raw_data <- raw_data %>% mutate(assay_temp_diff = assay_temp - control_temp)
+
+# Rename some studies 
+raw_data <- raw_data %>%
+  mutate(
+    ref = case_when(
+      ref == "Hallsson_et_al_2012_2" ~ "Hallson_et_al_2012",
+      ref == "Gibbin_et_al_2017_1" ~ "Gibbin_et_al_2017a",
+      ref == "Gibbin_et_al_2017_2" ~ "Gibbin_et_al_2017b",
+      ref == "Partridge_et_al_1994" ~ "Partridge_et_al_1994a",
+      TRUE ~ ref
+    )
+  )
 ```
 
 ## **Convert confidence intervals to SE, and SE to SD**
@@ -460,7 +473,7 @@ table_sample_sizes %>%
 Note that these models take a substantial amount of time to run. Therefore, these models were ran on the computational cluster Katana, supported by Research Technology Services at UNSW Sydney. 
 Resources needed to run these models are provided in the /pbs/ folder, and the R code used for each model is in the R/models/ folder. 
 
-## **Changes in trait means (lnRR)**  {.tabset .tabset_fade .tabset_pills}
+## **Changes in trait means (lnRR)**  {.tabset .tabset-fade .tabset_pills}
 
 ### **Overall model**
 
@@ -723,6 +736,9 @@ lnRR_model_warm_cold <- readRDS("RData/lnRR_model_warm_cold.rds")
 # Display model output 
 summary(lnRR_model_warm_cold)
 
+# R2
+r2(lnRR_model_warm_cold)
+
 # Cleaned model output
 as.data.frame(fixef(lnRR_model_warm_cold, summary = TRUE)) %>%
   # Rename categorical variables for cleaner display
@@ -892,6 +908,9 @@ lnRR_model_assay_temp_diff <- readRDS("RData/lnRR_model_assay_temp_diff.rds")
 # Display model output 
 summary(lnRR_model_assay_temp_diff)
 
+# R2
+r2(lnRR_model_assay_temp_diff)
+
 # Cleaned model output
 as.data.frame(fixef(lnRR_model_assay_temp_diff, summary = TRUE)) %>%
   # Rename categorical variables for cleaner display
@@ -1050,6 +1069,9 @@ lnRR_model_sel_temp_diff <- readRDS("RData/lnRR_model_sel_temp_diff.rds")
 # Display model output 
 summary(lnRR_model_sel_temp_diff)
 
+# R2
+r2(lnRR_model_sel_temp_diff)
+
 # Cleaned model output
 as.data.frame(fixef(lnRR_model_sel_temp_diff, summary = TRUE)) %>%
   # Rename categorical variables for cleaner display
@@ -1203,6 +1225,9 @@ lnRR_model_gen_selection <- readRDS("RData/lnRR_model_gen_selection.rds")
 
 # Display model output 
 summary(lnRR_model_gen_selection)
+
+# R2
+r2(lnRR_model_gen_selection)
 
 # Cleaned model output
 as.data.frame(fixef(lnRR_model_gen_selection, summary = TRUE)) %>%
@@ -1362,6 +1387,9 @@ lnRR_model_gen_common_garden <- readRDS("RData/lnRR_model_gen_common_garden.rds"
 # Display model output 
 summary(lnRR_model_gen_common_garden)
 
+# R2
+r2(lnRR_model_gen_common_garden)
+
 # Cleaned model output
 as.data.frame(fixef(lnRR_model_gen_common_garden, summary = TRUE)) %>%
   # Rename categorical variables for cleaner display
@@ -1520,6 +1548,9 @@ lnRR_model_pop_size <- readRDS("RData/lnRR_model_pop_size.rds")
 
 # Display model output 
 summary(lnRR_model_pop_size)
+
+# R2
+r2(lnRR_model_pop_size)
 
 # Cleaned model output
 as.data.frame(fixef(lnRR_model_pop_size, summary = TRUE)) %>%
@@ -1691,6 +1722,9 @@ lnRR_model_all_moderators <- readRDS("RData/lnRR_model_all_moderators.rds")
 
 # Display model output 
 summary(lnRR_model_all_moderators)
+
+# R2
+r2(lnRR_model_all_moderators)
 
 # Cleaned model output
 as.data.frame(fixef(lnRR_model_all_moderators, summary = TRUE)) %>%
@@ -2039,7 +2073,7 @@ ggsave(file = "fig/lnRR_all_moderators_assay_temp_diff.png", width = 12, height 
 ```
 
 
-## **Changes in relative trait variance (lnCVR)** {.tabset .tabset_fade .tabset_pills}
+## **Changes in relative trait variance (lnCVR)** {.tabset .tabset-fade .tabset_pills}
 
 ### **Overall model**
 
@@ -2293,6 +2327,9 @@ lnCVR_model_warm_cold <- readRDS("RData/lnCVR_model_warm_cold.rds")
 # Display model output 
 summary(lnCVR_model_warm_cold)
 
+# R2
+r2(lnCVR_model_warm_cold)
+
 # Cleaned model output
 as.data.frame(fixef(lnCVR_model_warm_cold, summary = TRUE)) %>%
   # Rename categorical variables for cleaner display
@@ -2452,6 +2489,9 @@ lnCVR_model_assay_temp_diff <- readRDS("RData/lnCVR_model_assay_temp_diff.rds")
 
 # Display model output 
 summary(lnCVR_model_assay_temp_diff)
+
+# R2
+r2(lnCVR_model_assay_temp_diff)
 
 # Cleaned model output
 as.data.frame(fixef(lnCVR_model_assay_temp_diff, summary = TRUE)) %>%
@@ -2768,6 +2808,9 @@ lnCVR_model_gen_selection <- readRDS("RData/lnCVR_model_gen_selection.rds")
 # Display model output 
 summary(lnCVR_model_gen_selection)
 
+# R2
+r2(lnCVR_model_gen_selection)
+
 # Cleaned model output
 as.data.frame(fixef(lnCVR_model_gen_selection, summary = TRUE)) %>%
   # Rename categorical variables for cleaner display
@@ -2927,6 +2970,9 @@ lnCVR_model_gen_common_garden <- readRDS("RData/lnCVR_model_gen_common_garden.rd
 # Display model output 
 summary(lnCVR_model_gen_common_garden)
 
+# R2
+r2(lnCVR_model_warm_gen_common_garden)
+
 # Cleaned model output
 as.data.frame(fixef(lnCVR_model_gen_common_garden, summary = TRUE)) %>%
   # Rename categorical variables for cleaner display
@@ -3084,6 +3130,9 @@ lnCVR_model_pop_size <- readRDS("RData/lnCVR_model_pop_size.rds")
 
 # Display model output 
 summary(lnCVR_model_pop_size)
+
+# R2
+r2(lnCVR_model_pop_size)
 
 # Cleaned model output
 as.data.frame(fixef(lnCVR_model_pop_size, summary = TRUE)) %>%
@@ -3255,6 +3304,9 @@ lnCVR_model_all_moderators <- readRDS("RData/lnCVR_model_all_moderators.rds")
 
 # Display model output 
 summary(lnCVR_model_all_moderators)
+
+# R2
+r2(lnCVR_model_all_moderators)
 
 # Cleaned model output
 as.data.frame(fixef(lnCVR_model_all_moderators, summary = TRUE)) %>%
@@ -3603,7 +3655,7 @@ ggsave(file = "fig/lnCVR_all_moderators_assay_temp_diff.png", width = 12, height
 ```
 
 
-## **Changes in trait variance (lnVR)** {.tabset .tabset_fade .tabset_pills}
+## **Changes in trait variance (lnVR)** {.tabset .tabset-fade .tabset_pills}
 
 ### **Overall model**
 
@@ -3857,6 +3909,9 @@ lnVR_model_warm_cold <- readRDS("RData/lnVR_model_warm_cold.rds")
 # Display model output 
 summary(lnVR_model_warm_cold)
 
+# R2
+r2(lnVR_model_warm_cold)
+
 # Cleaned model output
 as.data.frame(fixef(lnVR_model_warm_cold, summary = TRUE)) %>%
   # Rename categorical variables for cleaner display
@@ -4015,6 +4070,9 @@ lnVR_model_assay_temp_diff <- readRDS("RData/lnVR_model_assay_temp_diff.rds")
 
 # Display model output 
 summary(lnVR_model_assay_temp_diff)
+
+# R2
+r2(lnVR_model_assay_temp_diff)
 
 # Cleaned model output
 as.data.frame(fixef(lnVR_model_assay_temp_diff, summary = TRUE)) %>%
@@ -4175,6 +4233,9 @@ lnVR_model_sel_temp_diff <- readRDS("RData/lnVR_model_sel_temp_diff.rds")
 # Display model output 
 summary(lnVR_model_sel_temp_diff)
 
+# R2
+r2(lnVR_model_sel_temp_diff)
+
 # Cleaned model output
 as.data.frame(fixef(lnVR_model_sel_temp_diff, summary = TRUE)) %>%
   # Rename categorical variables for cleaner display
@@ -4327,6 +4388,9 @@ lnVR_model_gen_selection <- readRDS("RData/lnVR_model_gen_selection.rds")
 
 # Display model output 
 summary(lnVR_model_gen_selection)
+
+# R2
+r2(lnVR_model_gen_selection)
 
 # Cleaned model output
 as.data.frame(fixef(lnVR_model_gen_selection, summary = TRUE)) %>%
@@ -4486,6 +4550,9 @@ lnVR_model_gen_common_garden <- readRDS("RData/lnVR_model_gen_common_garden.rds"
 # Display model output 
 summary(lnVR_model_gen_common_garden)
 
+# R2
+r2(lnVR_model_gen_common_garden)
+
 # Cleaned model output
 as.data.frame(fixef(lnVR_model_gen_common_garden, summary = TRUE)) %>%
   # Rename categorical variables for cleaner display
@@ -4643,6 +4710,9 @@ lnVR_model_pop_size <- readRDS("RData/lnVR_model_pop_size.rds")
 
 # Display model output 
 summary(lnVR_model_pop_size)
+
+# R2
+r2(lnVR_model_pop_size)
 
 # Cleaned model output
 as.data.frame(fixef(lnVR_model_pop_size, summary = TRUE)) %>%
@@ -4812,6 +4882,9 @@ lnVR_model_all_moderators <- readRDS("RData/lnVR_model_all_moderators.rds")
 
 # Display model output 
 summary(lnVR_model_all_moderators)
+
+# R2
+r2(lnVR_model_all_moderators)
 
 # Cleaned model output
 as.data.frame(fixef(lnVR_model_all_moderators, summary = TRUE)) %>%
@@ -5166,7 +5239,7 @@ ggsave(file = "fig/lnVR_all_moderators_assay_temp_diff.png", width = 12, height 
 
 # **Publication bias** 
 
-## **Changes in mean responses (lnRR)** {.tabset .tabset_fade .tabset_pills}
+## **Changes in mean responses (lnRR)** {.tabset .tabset-fade .tabset_pills}
 
 ### **Egger's regression** 
 
@@ -5212,6 +5285,9 @@ lnRR_model_pub_bias_var <- readRDS("RData/lnRR_model_pub_bias_var.rds")
 
 # Display model output 
 summary(lnRR_model_pub_bias_var)
+
+# R2
+r2(lnRR_model_pub_bias_var)
 
 # Cleaned model output
 as.data.frame(fixef(lnRR_model_pub_bias_var, summary = TRUE)) %>%
@@ -5350,6 +5426,9 @@ lnRR_model_pub_bias_year <- readRDS("RData/lnRR_model_pub_bias_year.rds")
 # Display model output 
 summary(lnRR_model_pub_bias_year)
 
+# R2
+r2(lnRR_model_pub_bias_year)
+
 # Cleaned model output
 as.data.frame(fixef(lnRR_model_pub_bias_year, summary = TRUE)) %>%
   # Rename categorical variables for cleaner display
@@ -5417,7 +5496,7 @@ ggplot() +
     geom_point(data = data,  # Effect sizes, scaled by precision
                   aes(x = pub_year, 
                       y = lnRR, 
-                      size = 1/sqrt(pub_year), 
+                      size = 1/sqrt(var_lnRR), 
                       fill = warm_cold), 
                   shape = 21, 
                   alpha = 0.7, 
@@ -5463,7 +5542,7 @@ ggplot() +
 ggsave(file = "fig/lnRR_pub_bias_year.png", width = 12, height = 7, dpi = 500)
 ```
 
-## **Changes in relative trait variance (lnCVR)** {.tabset .tabset_fade .tabset_pills}
+## **Changes in relative trait variance (lnCVR)** {.tabset .tabset-fade .tabset_pills}
 
 ### **Egger's regression** 
 
@@ -5509,6 +5588,9 @@ lnCVR_model_pub_bias_var <- readRDS("RData/lnCVR_model_pub_bias_var.rds")
 
 # Display model output 
 summary(lnCVR_model_pub_bias_var)
+
+# R2
+r2(lnCVR_model_pub_bias_var)
 
 # Cleaned model output
 as.data.frame(fixef(lnCVR_model_pub_bias_var, summary = TRUE)) %>%
@@ -5648,6 +5730,9 @@ lnCVR_model_pub_bias_year <- readRDS("RData/lnCVR_model_pub_bias_year.rds")
 # Display model output 
 summary(lnCVR_model_pub_bias_year)
 
+# R2
+r2(lnCVR_model_pub_bias_year)
+
 # Cleaned model output
 as.data.frame(fixef(lnCVR_model_pub_bias_year, summary = TRUE)) %>%
   # Rename categorical variables for cleaner display
@@ -5715,7 +5800,7 @@ ggplot() +
     geom_point(data = data,  # Effect sizes, scaled by precision
                   aes(x = pub_year, 
                       y = lnCVR, 
-                      size = 1/sqrt(pub_year), 
+                      size = 1/sqrt(var_lnCVR), 
                       fill = warm_cold), 
                   shape = 21, 
                   alpha = 0.7, 
@@ -5762,7 +5847,7 @@ ggsave(file = "fig/lnCVR_pub_bias_year.png", width = 12, height = 7, dpi = 500)
 ```
 
 
-## **Changes in trait variance (lnVR)** {.tabset .tabset_fade .tabset_pills}
+## **Changes in trait variance (lnVR)** {.tabset .tabset-fade .tabset_pills}
 
 ### **Egger's regression** 
 
@@ -5808,6 +5893,9 @@ lnVR_model_pub_bias_var <- readRDS("RData/lnVR_model_pub_bias_var.rds")
 
 # Display model output 
 summary(lnVR_model_pub_bias_var)
+
+# R2
+r2(lnVR_model_pub_bias_var)
 
 # Cleaned model output
 as.data.frame(fixef(lnVR_model_pub_bias_var, summary = TRUE)) %>%
@@ -5947,6 +6035,9 @@ lnVR_model_pub_bias_year <- readRDS("RData/lnVR_model_pub_bias_year.rds")
 # Display model output 
 summary(lnVR_model_pub_bias_year)
 
+# R2
+r2(lnVR_model_pub_bias_year)
+
 # Cleaned model output
 as.data.frame(fixef(lnVR_model_pub_bias_year, summary = TRUE)) %>%
   # Rename categorical variables for cleaner display
@@ -6014,7 +6105,7 @@ ggplot() +
     geom_point(data = data,  # Effect sizes, scaled by precision
                   aes(x = pub_year, 
                       y = lnVR, 
-                      size = 1/sqrt(pub_year), 
+                      size = 1/sqrt(var_lnVR), 
                       fill = warm_cold), 
                   shape = 21, 
                   alpha = 0.7, 
@@ -6101,7 +6192,7 @@ VCV_lnVR_warm <- vcalc(vi = var_lnVR,
                         data = data_warm) 
 ```
 
-## **Changes in mean responses (lnRR)** {.tabset .tabset_fade .tabset_pills}
+## **Changes in mean responses (lnRR)** {.tabset .tabset-fade .tabset_pills}
 
 ### **Constant vs. increasing temperatures** 
 
@@ -6146,6 +6237,9 @@ lnRR_model_constant_increasing <- readRDS("RData/lnRR_model_constant_increasing.
 
 # Display model output 
 summary(lnRR_model_constant_increasing)
+
+# R2
+r2(lnRR_model_constant_increasing)
 
 # Cleaned model output
 as.data.frame(fixef(lnRR_model_constant_increasing, summary = TRUE)) %>%
@@ -6505,6 +6599,9 @@ lnRR_model_concerns <- readRDS("RData/lnRR_model_concerns.rds")
 # Display model output 
 summary(lnRR_model_concerns)
 
+# R2
+r2(lnRR_model_concerns)
+
 # Cleaned model output
 as.data.frame(fixef(lnRR_model_concerns, summary = TRUE)) %>%
   # Rename categorical variables for cleaner display
@@ -6634,7 +6731,7 @@ ggsave(file = "fig/lnRR_concerns.png", width = 12, height = 7, dpi = 500)
 ```
 
 
-## **Changes in relative trait variance (lnCVR)** {.tabset .tabset_fade .tabset_pills}
+## **Changes in relative trait variance (lnCVR)** {.tabset .tabset-fade .tabset_pills}
 
 ### **Constant vs. increasing temperatures** 
 
@@ -6679,6 +6776,9 @@ lnCVR_model_constant_increasing <- readRDS("RData/lnCVR_model_constant_increasin
 
 # Display model output 
 summary(lnCVR_model_constant_increasing)
+
+# R2
+r2(lnCVR_model_constant_increasing)
 
 # Cleaned model output
 as.data.frame(fixef(lnCVR_model_constant_increasing, summary = TRUE)) %>%
@@ -7025,6 +7125,9 @@ lnCVR_model_concerns <- readRDS("RData/lnCVR_model_concerns.rds")
 # Display model output 
 summary(lnCVR_model_concerns)
 
+# R2
+r2(lnCVR_model_concerns)
+
 # Cleaned model output
 as.data.frame(fixef(lnCVR_model_concerns, summary = TRUE)) %>%
   # Rename categorical variables for cleaner display
@@ -7152,7 +7255,7 @@ ggplot() +
 ggsave(file = "fig/lnCVR_concerns.png", width = 12, height = 7, dpi = 500)
 ```
 
-## **Changes in trait variance (lnVR)** {.tabset .tabset_fade .tabset_pills}
+## **Changes in trait variance (lnVR)** {.tabset .tabset-fade .tabset_pills}
 
 ### **Constant vs. increasing temperatures** 
 
@@ -7197,6 +7300,9 @@ lnVR_model_constant_increasing <- readRDS("RData/lnVR_model_constant_increasing.
 
 # Display model output 
 summary(lnVR_model_constant_increasing)
+
+# R2
+r2(lnVR_model_pub_constant_increasing)
 
 # Cleaned model output
 as.data.frame(fixef(lnVR_model_constant_increasing, summary = TRUE)) %>%
@@ -7542,6 +7648,9 @@ lnVR_model_concerns <- readRDS("RData/lnVR_model_concerns.rds")
 # Display model output 
 summary(lnVR_model_concerns)
 
+# R2
+r2(lnVR_model_concerns)
+
 # Cleaned model output
 as.data.frame(fixef(lnVR_model_concerns, summary = TRUE)) %>%
   # Rename categorical variables for cleaner display
@@ -7669,9 +7778,80 @@ ggplot() +
 ggsave(file = "fig/lnVR_concerns.png", width = 12, height = 7, dpi = 500)
 ```
 
-# **Figures for publication** 
+# **Main figures** 
 
 Note that Figure 1 was created without code.
+
+## **Helper functions**
+```{r}
+# Helper functions to clip y axis differently for each trait
+make_facet_limits <- function(data_points, data_preds, trait_var = "trait_type",
+                              y_point = "lnRR", y_lower = "lower.HPD", y_upper = "upper.HPD",
+                              buffer = 0.05, cap = 1.6) {
+  
+  y_all <- bind_rows(
+    data.frame(
+      trait_type = data_points[[trait_var]],
+      y = data_points[[y_point]]
+    ),
+    data.frame(
+      trait_type = data_preds[[trait_var]],
+      y = data_preds[[y_lower]]
+    ),
+    data.frame(
+      trait_type = data_preds[[trait_var]],
+      y = data_preds[[y_upper]]
+    )
+  ) %>%
+    dplyr::group_by(trait_type) %>%
+    dplyr::summarise(
+      lim = pmin(max(abs(y), na.rm = TRUE) + buffer, cap),
+      ymin = -lim,
+      ymax = lim,
+      .groups = "drop"
+    )
+  
+  y_all
+}
+
+clip_plot_data <- function(data_points, data_preds, facet_limits,
+                           trait_var = "trait_type",
+                           y_point = "lnRR", y_mean = "emmean",
+                           y_lower = "lower.HPD", y_upper = "upper.HPD") {
+  
+  # POINTS: remove values outside limits
+  data_points_plot <- data_points %>%
+    dplyr::left_join(facet_limits, by = setNames("trait_type", trait_var)) %>%
+    dplyr::filter(.data[[y_point]] >= ymin, .data[[y_point]] <= ymax)
+  
+  # PREDICTIONS: clip to limits
+  data_preds_plot <- data_preds %>%
+    dplyr::left_join(facet_limits, by = setNames("trait_type", trait_var)) %>%
+    dplyr::mutate(
+      y_mean_plot  = pmax(pmin(.data[[y_mean]],  ymax), ymin),
+      y_lower_plot = pmax(pmin(.data[[y_lower]], ymax), ymin),
+      y_upper_plot = pmax(pmin(.data[[y_upper]], ymax), ymin)
+    )
+  
+  list(points = data_points_plot, preds = data_preds_plot)
+}
+
+make_sample_size_positions <- function(sample_sizes_df, facet_limits,
+                                       warm_var = "warm_cold",
+                                       trait_var = "trait_type") {
+  
+  sample_sizes_df %>%
+    dplyr::left_join(facet_limits, by = setNames("trait_type", trait_var)) %>%
+    dplyr::mutate(
+      y = ifelse(
+        .data[[warm_var]] == "Warm" | .data[[warm_var]] == "warm",
+        ymin + 0.18 * (ymax - ymin),
+        ymin + 0.05 * (ymax - ymin)
+      )
+    )
+}
+```
+
 
 ## **Figure 2**
 ```{r, fig.width = 12, fig.height = 10}
@@ -7782,27 +7962,41 @@ ggsave(file = "fig/figure_2.png", width = 12, height = 10, dpi = 500)
 lnRR_model_assay_temp_diff <- readRDS("RData/lnRR_model_assay_temp_diff.rds")
 
 # Generate predictions
-emmeans_assay_temp_diff <- as.data.frame(emmeans(
-  lnRR_model_assay_temp_diff,
-  specs = ~ assay_temp_diff | trait_type * warm_cold,
-  at = list(assay_temp_diff = seq(min(data$assay_temp_diff), max(data$assay_temp_diff), by = 0.5)))
+emmeans_assay_temp_diff <- as.data.frame(
+  emmeans(
+    lnRR_model_assay_temp_diff,
+    specs = ~ assay_temp_diff | trait_type * warm_cold,
+    at = list(
+      assay_temp_diff = seq(
+        min(data$assay_temp_diff, na.rm = TRUE),
+        max(data$assay_temp_diff, na.rm = TRUE),
+        by = 0.5
+      )
+    )
   )
+)
 
 # Calculate range of values for each category
 range_df <- data %>%
   group_by(trait_type, warm_cold) %>%
   summarize(
-    min_assay_temp_diff = min(assay_temp_diff),
-    max_assay_temp_diff = max(assay_temp_diff)
+    min_assay_temp_diff = min(assay_temp_diff, na.rm = TRUE),
+    max_assay_temp_diff = max(assay_temp_diff, na.rm = TRUE),
+    .groups = "drop"
   )
 
-emmeans_assay_temp_diff$trait_type <- factor(emmeans_assay_temp_diff$trait_type, 
-                          levels = c("body_size", "fecundity", "survival"), 
-                          labels = c("Body size", "Fecundity", "Survival"))
+# Match emmeans coding to whatever is already in data
+emmeans_assay_temp_diff$trait_type <- factor(
+  emmeans_assay_temp_diff$trait_type,
+  levels = c("body_size", "fecundity", "survival"),
+  labels = c("Body size", "Fecundity", "Survival")
+)
 
-emmeans_assay_temp_diff$warm_cold <- factor(emmeans_assay_temp_diff$warm_cold, 
-                          levels = c("cold", "warm"), 
-                          labels = c("Cold", "Warm"))
+emmeans_assay_temp_diff$warm_cold <- factor(
+  emmeans_assay_temp_diff$warm_cold,
+  levels = c("cold", "warm"),
+  labels = c("Cold", "Warm")
+)
 
 # Tailor predictions to the range of the data
 emmeans_assay_temp_diff <- emmeans_assay_temp_diff %>%
@@ -7812,75 +8006,117 @@ emmeans_assay_temp_diff <- emmeans_assay_temp_diff %>%
     assay_temp_diff <= max_assay_temp_diff
   )
 
-# Plot
-ggplot() + 
-    geom_hline(yintercept = 0, # Horizontal line
-               linetype = 2, 
-               colour = "black", 
-               alpha = 0.75) +  
-    geom_vline(xintercept = 0, # Vertical line
-               linetype = 2, 
-               colour = "black", 
-               alpha = 0.75) +  
-    geom_point(data = data, # Effect sizes, scaled by precision
-                  aes(x = assay_temp_diff, 
-                      y = lnRR, 
-                      size = 1/sqrt(var_lnRR), 
-                      fill = warm_cold), 
-                  shape = 21, 
-                  alpha = 0.7, 
-                  stroke = 1,
-                  position = position_jitter(width = 0.05)) + 
-     geom_ribbon(data = emmeans_assay_temp_diff, # Shaded area for credible intervals
-                 aes(x = assay_temp_diff,
-                     ymin = lower.HPD, 
-                     ymax = upper.HPD, 
-                     fill = warm_cold,
-                     group = warm_cold), 
-                 alpha = .5) + 
-     geom_line(data = emmeans_assay_temp_diff,  # Predicted regression line
-               aes(y = emmean,
-                   x = assay_temp_diff,
-                   color = warm_cold,
-                   group = warm_cold), 
-               size = 1.5) + 
-      geom_text(data = sample_sizes, 
-              aes(x = Inf, 
-                  y = ifelse(warm_cold == "Warm", -0.9, -1.3),  # Sample sizes
-                  label = paste0("k = ", estimates, " (", studies, ")"),
-                  color = warm_cold), 
-              hjust = 1.05, size = 5, show.legend = FALSE) +
-  
-  facet_wrap(~ trait_type, ncol = 1) + # Different panels for each trait
-  scale_fill_manual(values = c("#06B4BA", "#E80756"))+
-  scale_color_manual(values = c("#06B4BA", "#E80756"))+
-  labs(x = "Assay temperature difference", y = "lnRR", col = "Regime") +
-  theme_bw() + 
-  scale_size_continuous(range = c(4, 10))+ 
-  theme(text = element_text(size = 25, color = "black"),
-          legend.title = ggplot2::element_text(size = 18),
-          legend.text = ggplot2::element_text(size = 16),
-          axis.text.y = ggplot2::element_text(size = 20, 
-                colour = "black", hjust = 0.5),
-          axis.text.x = ggplot2::element_text(size = 20),
-        panel.border = element_rect(color = "black", size = 1.5),
-        strip.background = element_blank(),
-        strip.text = element_text(color = "black", size = 22)) +
-    guides(fill = "none", size = "none")+
-    coord_cartesian(ylim = c(-1.5, 1.5))
+# Plot objects using helper functions
+facet_limits_rr <- make_facet_limits(
+  data_points = data,
+  data_preds = emmeans_assay_temp_diff,
+  y_point = "lnRR",
+  y_lower = "lower.HPD",
+  y_upper = "upper.HPD",
+  buffer = 0.05,
+  cap = 1.6
+)
 
-ggsave(file = "fig/figure_3.png", width = 12, height = 10, dpi = 500)
+plot_data_rr <- clip_plot_data(
+  data_points = data,
+  data_preds = emmeans_assay_temp_diff,
+  facet_limits = facet_limits_rr,
+  y_point = "lnRR",
+  y_mean = "emmean",
+  y_lower = "lower.HPD",
+  y_upper = "upper.HPD"
+)
+
+sample_sizes_rr <- make_sample_size_positions(
+  sample_sizes_df = sample_sizes,
+  facet_limits = facet_limits_rr
+)
+
+ggplot() + 
+  geom_blank(data = facet_limits_rr, aes(x = 0, y = ymin)) +
+  geom_blank(data = facet_limits_rr, aes(x = 0, y = ymax)) +
+  geom_hline(yintercept = 0, linetype = 2, colour = "black", alpha = 0.75) +  
+  geom_vline(xintercept = 0, linetype = 2, colour = "black", alpha = 0.75) +  
+  geom_point(
+    data = plot_data_rr$points,
+    aes(
+      x = assay_temp_diff, 
+      y = lnRR, 
+      size = 1 / sqrt(var_lnRR), 
+      fill = warm_cold
+    ), 
+    shape = 21, 
+    alpha = 0.7, 
+    stroke = 1,
+    position = position_jitter(width = 0.05)
+  ) + 
+  geom_ribbon(
+    data = plot_data_rr$preds,
+    aes(
+      x = assay_temp_diff,
+      ymin = y_lower_plot, 
+      ymax = y_upper_plot, 
+      fill = warm_cold,
+      group = warm_cold
+    ), 
+    alpha = .5
+  ) + 
+  geom_line(
+    data = plot_data_rr$preds,
+    aes(
+      y = y_mean_plot,
+      x = assay_temp_diff,
+      color = warm_cold,
+      group = warm_cold
+    ), 
+    size = 1.5
+  ) + 
+  geom_text(
+    data = sample_sizes_rr, 
+    aes(
+      x = Inf, 
+      y = y,
+      label = paste0("k = ", estimates, " (", studies, ")"),
+      color = warm_cold
+    ), 
+    hjust = 1.05,
+    size = 5,
+    show.legend = FALSE
+  ) +
+  facet_wrap(~ trait_type, ncol = 1, scales = "free_y") +
+  scale_fill_manual(values = c("#06B4BA", "#E80756")) +
+  scale_color_manual(values = c("#06B4BA", "#E80756")) +
+  labs(
+    x = "Assay temperature difference",
+    y = "lnRR",
+    col = "Regime"
+  ) +
+  theme_bw() + 
+  scale_size_continuous(range = c(4, 10)) + 
+  theme(
+    text = element_text(size = 25, color = "black"),
+    legend.title = ggplot2::element_text(size = 18),
+    legend.text = ggplot2::element_text(size = 16),
+    axis.text.y = ggplot2::element_text(size = 20, colour = "black", hjust = 0.5),
+    axis.text.x = ggplot2::element_text(size = 20),
+    panel.border = element_rect(color = "black", size = 1.5),
+    strip.background = element_blank(),
+    strip.text = element_text(color = "black", size = 22)
+  ) +
+  guides(fill = "none", col = "none", size = "none")
+
+ggsave(file = "fig/figure_3.svg", width = 10, height = 10, dpi = 500)
 ```
+
 
 ## **Figure 4** 
 
-```{r, fig.width = 20, fig.height = 32}
+```{r, fig.width = 20, fig.height = 26}
 # Load models
 lnRR_model_sel_temp_diff <- readRDS("RData/lnRR_model_sel_temp_diff.rds")
 lnRR_model_gen_selection <- readRDS("RData/lnRR_model_gen_selection.rds")
 lnRR_model_gen_common_garden <- readRDS("RData/lnRR_model_gen_common_garden.rds")
 lnRR_model_pop_size <- readRDS("RData/lnRR_model_pop_size.rds")
-lnRR_model_all_moderators <- readRDS("RData/lnRR_model_all_moderators.rds")
 
 ##################### Selection temperature ################################
 
@@ -7916,59 +8152,93 @@ emmeans_sel_temp_diff <- emmeans_sel_temp_diff %>%
     select_temp_diff <= max_select_temp_diff
   )
 
+
+facet_limits_sel <- make_facet_limits(
+  data_points = data,
+  data_preds = emmeans_sel_temp_diff,
+  buffer = 0.05,
+  cap = 1.6
+)
+
+plot_data_sel <- clip_plot_data(
+  data_points = data,
+  data_preds = emmeans_sel_temp_diff,
+  facet_limits = facet_limits_sel
+)
+
+sample_sizes_sel <- make_sample_size_positions(
+  sample_sizes_df = sample_sizes,
+  facet_limits = facet_limits_sel
+)
+
 # Plot
 sel_temp_diff <- 
 ggplot() + 
-    geom_hline(yintercept = 0, # Horizontal line
-               linetype = 2, 
-               colour = "black", 
-               alpha = 0.75) + 
-    geom_point(data = data,  # Effect sizes, scaled by precision
-                  aes(x = select_temp_diff, 
-                      y = lnRR, 
-                      size = 1/sqrt(var_lnRR), 
-                      fill = warm_cold), 
-                  shape = 21, 
-                  alpha = 0.7, 
-                  stroke = 1,
-                  position = position_jitter(width = 0.05)) + 
-     geom_ribbon(data = emmeans_sel_temp_diff, # Shaded area for credible intervals
-                 aes(x = select_temp_diff,
-                     ymin = lower.HPD, 
-                     ymax = upper.HPD, 
-                     fill = warm_cold,
-                     group = warm_cold), 
-                 alpha = .5) + 
-     geom_line(data = emmeans_sel_temp_diff, # Predicted regression line
-               aes(y = emmean,
-                   x = select_temp_diff,
-                   color = warm_cold,
-                   group = warm_cold), 
-               size = 1.5) +  
-     geom_text(data = sample_sizes, 
-              aes(x = Inf, 
-                  y = ifelse(warm_cold == "Warm", -0.9, -1.3),  # Sample sizes
-                  label = paste0("k = ", estimates, " (", studies, ")"),
-                  color = warm_cold), 
-              hjust = 1.05, size = 5, show.legend = FALSE) +
-  facet_wrap(~ trait_type, ncol = 1) +  # Different panels for each trait
-  scale_fill_manual(values = c("#06B4BA", "#E80756"))+
-  scale_color_manual(values = c("#06B4BA", "#E80756"))+
+  geom_blank(data = facet_limits_sel, aes(x = 0, y = ymin)) +
+  geom_blank(data = facet_limits_sel, aes(x = 0, y = ymax)) +
+  geom_hline(yintercept = 0, linetype = 2, colour = "black", alpha = 0.75) + 
+  geom_point(
+    data = plot_data_sel$points,
+    aes(
+      x = select_temp_diff, 
+      y = lnRR, 
+      size = 1/sqrt(var_lnRR), 
+      fill = warm_cold
+    ), 
+    shape = 21, 
+    alpha = 0.7, 
+    stroke = 1,
+    position = position_jitter(width = 0.05)
+  ) + 
+  geom_ribbon(
+    data = plot_data_sel$preds,
+    aes(
+      x = select_temp_diff,
+      ymin = y_lower_plot, 
+      ymax = y_upper_plot, 
+      fill = warm_cold,
+      group = warm_cold
+    ), 
+    alpha = .5
+  ) + 
+  geom_line(
+    data = plot_data_sel$preds,
+    aes(
+      y = y_mean_plot,
+      x = select_temp_diff,
+      color = warm_cold,
+      group = warm_cold
+    ), 
+    size = 1.5
+  ) +  
+  geom_text(
+    data = sample_sizes_sel, 
+    aes(
+      x = Inf, 
+      y = y,
+      label = paste0("k = ", estimates, " (", studies, ")"),
+      color = warm_cold
+    ), 
+    hjust = 1.05, size = 7, show.legend = FALSE
+  ) +
+  facet_wrap(~ trait_type, ncol = 1, scales = "free_y") +
+  scale_fill_manual(values = c("#06B4BA", "#E80756")) +
+  scale_color_manual(values = c("#06B4BA", "#E80756")) +
   labs(x = "Selection temperature difference", y = "lnRR", col = "Regime") +
   theme_bw() + 
-  scale_size_continuous(range = c(4, 10))+ 
-  theme(text = element_text(size = 30, color = "black"),
-          legend.title = ggplot2::element_text(size = 18),
-          legend.text = ggplot2::element_text(size = 16),
-          axis.text.y = ggplot2::element_text(size = 20, 
-                colour = "black", hjust = 0.5),
-          axis.text.x = ggplot2::element_text(size = 20),
-        panel.border = element_rect(color = "black", size = 1.5),
-        strip.background = element_blank(),
-        strip.text = element_text(color = "black", size = 28),
-        plot.margin = unit(c(1, 0, 0, 0), "cm")) +
-    guides(fill = "none", size = "none", color = "none")+
-    coord_cartesian(ylim = c(-1.5, 1.5))
+  scale_size_continuous(range = c(4, 10)) + 
+  theme(
+    text = element_text(size = 30, color = "black"),
+    legend.title = ggplot2::element_text(size = 18),
+    legend.text = ggplot2::element_text(size = 16),
+    axis.text.y = ggplot2::element_text(size = 20, colour = "black", hjust = 0.5),
+    axis.text.x = ggplot2::element_text(size = 20),
+    panel.border = element_rect(color = "black", size = 1.5),
+    strip.background = element_blank(),
+    strip.text = element_text(color = "black", size = 28),
+    plot.margin = unit(c(1, 0, 0, 0), "cm")
+  ) +
+  guides(fill = "none", size = "none", color = "none")
 
 ############## Generations of selection ##################################
 
@@ -8005,59 +8275,92 @@ emmeans_gen_selection <- emmeans_gen_selection %>%
   )
 
 # Plot
+facet_limits_gen_sel <- make_facet_limits(
+  data_points = data,
+  data_preds = emmeans_gen_selection,
+  buffer = 0.05,
+  cap = 1.6
+)
+
+plot_data_gen_sel <- clip_plot_data(
+  data_points = data,
+  data_preds = emmeans_gen_selection,
+  facet_limits = facet_limits_gen_sel
+)
+
+sample_sizes_gen_sel <- make_sample_size_positions(
+  sample_sizes_df = sample_sizes,
+  facet_limits = facet_limits_gen_sel
+)
+
 gen_selection <- 
 ggplot() + 
-    geom_hline(yintercept = 0, # Horizontal line
-               linetype = 2, 
-               colour = "black", 
-               alpha = 0.75) + 
-    geom_point(data = data,  # Effect sizes, scaled by precision
-                  aes(x = gen_selection, 
-                      y = lnRR, 
-                      size = 1/sqrt(var_lnRR), 
-                      fill = warm_cold), 
-                  shape = 21, 
-                  alpha = 0.7, 
-                  stroke = 1,
-                  position = position_jitter(width = 0.05)) + 
-     geom_ribbon(data = emmeans_gen_selection, # Shaded area for credible intervals
-                 aes(x = gen_selection,
-                     ymin = lower.HPD, 
-                     ymax = upper.HPD, 
-                     fill = warm_cold,
-                     group = warm_cold), 
-                 alpha = .5) + 
-     geom_line(data = emmeans_gen_selection, # Predicted regression line
-               aes(y = emmean,
-                   x = gen_selection,
-                   color = warm_cold,
-                   group = warm_cold), 
-               size = 1.5) +  
-     geom_text(data = sample_sizes, 
-              aes(x = Inf, 
-                  y = ifelse(warm_cold == "Warm", -0.9, -1.3),  # Sample sizes
-                  label = paste0("k = ", estimates, " (", studies, ")"),
-                  color = warm_cold), 
-              hjust = 1.05, size = 5, show.legend = FALSE) +
-  facet_wrap(~ trait_type, ncol = 1) +  # Different panels for each trait
-  scale_fill_manual(values = c("#06B4BA", "#E80756"))+
-  scale_color_manual(values = c("#06B4BA", "#E80756"))+
-  labs(x = "Number  of generations of selection", y = "lnRR", col = "Regime") +
+  geom_blank(data = facet_limits_gen_sel, aes(x = 0, y = ymin)) +
+  geom_blank(data = facet_limits_gen_sel, aes(x = 0, y = ymax)) +
+  geom_hline(yintercept = 0, linetype = 2, colour = "black", alpha = 0.75) + 
+  geom_point(
+    data = plot_data_gen_sel$points,
+    aes(
+      x = gen_selection, 
+      y = lnRR, 
+      size = 1 / sqrt(var_lnRR), 
+      fill = warm_cold
+    ), 
+    shape = 21, 
+    alpha = 0.7, 
+    stroke = 1,
+    position = position_jitter(width = 0.05)
+  ) + 
+  geom_ribbon(
+    data = plot_data_gen_sel$preds,
+    aes(
+      x = gen_selection,
+      ymin = y_lower_plot, 
+      ymax = y_upper_plot, 
+      fill = warm_cold,
+      group = warm_cold
+    ), 
+    alpha = .5
+  ) + 
+  geom_line(
+    data = plot_data_gen_sel$preds,
+    aes(
+      y = y_mean_plot,
+      x = gen_selection,
+      color = warm_cold,
+      group = warm_cold
+    ), 
+    size = 1.5
+  ) +  
+  geom_text(
+    data = sample_sizes_gen_sel, 
+    aes(
+      x = Inf, 
+      y = y,
+      label = paste0("k = ", estimates, " (", studies, ")"),
+      color = warm_cold
+    ), 
+    hjust = 1.05, size = 7, show.legend = FALSE
+  ) +
+  facet_wrap(~ trait_type, ncol = 1, scales = "free_y") +
+  scale_fill_manual(values = c("#06B4BA", "#E80756")) +
+  scale_color_manual(values = c("#06B4BA", "#E80756")) +
+  labs(x = "Number of generations of selection", y = "lnRR", col = "Regime") +
   theme_bw() + 
-  scale_size_continuous(range = c(4, 10))+ 
-  theme(text = element_text(size = 30, color = "black"),
-          legend.title = ggplot2::element_text(size = 18),
-          legend.text = ggplot2::element_text(size = 16),
-          axis.text.y = ggplot2::element_text(size = 20, 
-                colour = "black", hjust = 0.5),
-          axis.text.x = ggplot2::element_text(size = 20),
-        panel.border = element_rect(color = "black", size = 1.5),
-        strip.background = element_blank(),
-        strip.text = element_text(color = "black", size = 28),
-        plot.margin = unit(c(1.5, 0, 0, 0), "cm")) +
-    guides(fill = "none", size = "none", color = "none")+
-    coord_cartesian(ylim = c(-1.5, 1.5),
-                    xlim = c(0, 150))
+  scale_size_continuous(range = c(4, 10)) + 
+  theme(
+    text = element_text(size = 30, color = "black"),
+    legend.title = ggplot2::element_text(size = 18),
+    legend.text = ggplot2::element_text(size = 16),
+    axis.text.y = ggplot2::element_text(size = 20, colour = "black", hjust = 0.5),
+    axis.text.x = ggplot2::element_text(size = 20),
+    panel.border = element_rect(color = "black", size = 1.5),
+    strip.background = element_blank(),
+    strip.text = element_text(color = "black", size = 28),
+    plot.margin = unit(c(1.5, 0, 0, 0), "cm")
+  ) +
+  guides(fill = "none", size = "none", color = "none") +
+  coord_cartesian(xlim = c(0, 150))
 
 
 ################### Generations of common garden #################################
@@ -8094,60 +8397,92 @@ emmeans_gen_common_garden <- emmeans_gen_common_garden %>%
     gen_common_garden <= max_gen_common_garden
   )
 
-# Plot
+facet_limits_gen_cg <- make_facet_limits(
+  data_points = data,
+  data_preds = emmeans_gen_common_garden,
+  buffer = 0.05,
+  cap = 1.6
+)
+
+plot_data_gen_cg <- clip_plot_data(
+  data_points = data,
+  data_preds = emmeans_gen_common_garden,
+  facet_limits = facet_limits_gen_cg
+)
+
+sample_sizes_gen_cg <- make_sample_size_positions(
+  sample_sizes_df = sample_sizes,
+  facet_limits = facet_limits_gen_cg
+)
+
 gen_common_garden <- 
 ggplot() + 
-    geom_hline(yintercept = 0, # Horizontal line
-               linetype = 2, 
-               colour = "black", 
-               alpha = 0.75) + 
-    geom_point(data = data,  # Effect sizes, scaled by precision
-                  aes(x = gen_common_garden, 
-                      y = lnRR, 
-                      size = 1/sqrt(var_lnRR), 
-                      fill = warm_cold), 
-                  shape = 21, 
-                  alpha = 0.7, 
-                  stroke = 1,
-                  position = position_jitter(width = 0.05)) + 
-     geom_ribbon(data = emmeans_gen_common_garden, # Shaded area for credible intervals
-                 aes(x = gen_common_garden,
-                     ymin = lower.HPD, 
-                     ymax = upper.HPD, 
-                     fill = warm_cold,
-                     group = warm_cold), 
-                 alpha = .5) + 
-     geom_line(data = emmeans_gen_common_garden, # Predicted regression line
-               aes(y = emmean,
-                   x = gen_common_garden,
-                   color = warm_cold,
-                   group = warm_cold), 
-               size = 1.5) +  
-     geom_text(data = sample_sizes, 
-              aes(x = Inf, 
-                  y = ifelse(warm_cold == "Warm", -0.9, -1.3),  # Sample sizes
-                  label = paste0("k = ", estimates, " (", studies, ")"),
-                  color = warm_cold), 
-              hjust = 1.05, size = 5, show.legend = FALSE) +
-  facet_wrap(~ trait_type, ncol = 1) +  # Different panels for each trait
-  scale_fill_manual(values = c("#06B4BA", "#E80756"))+
-  scale_color_manual(values = c("#06B4BA", "#E80756"))+
+  geom_blank(data = facet_limits_gen_cg, aes(x = 0, y = ymin)) +
+  geom_blank(data = facet_limits_gen_cg, aes(x = 0, y = ymax)) +
+  geom_hline(yintercept = 0, linetype = 2, colour = "black", alpha = 0.75) + 
+  geom_point(
+    data = plot_data_gen_cg$points,
+    aes(
+      x = gen_common_garden, 
+      y = lnRR, 
+      size = 1 / sqrt(var_lnRR), 
+      fill = warm_cold
+    ), 
+    shape = 21, 
+    alpha = 0.7, 
+    stroke = 1,
+    position = position_jitter(width = 0.05)
+  ) + 
+  geom_ribbon(
+    data = plot_data_gen_cg$preds,
+    aes(
+      x = gen_common_garden,
+      ymin = y_lower_plot, 
+      ymax = y_upper_plot, 
+      fill = warm_cold,
+      group = warm_cold
+    ), 
+    alpha = .5
+  ) + 
+  geom_line(
+    data = plot_data_gen_cg$preds,
+    aes(
+      y = y_mean_plot,
+      x = gen_common_garden,
+      color = warm_cold,
+      group = warm_cold
+    ), 
+    size = 1.5
+  ) +  
+  geom_text(
+    data = sample_sizes_gen_cg, 
+    aes(
+      x = Inf, 
+      y = y,
+      label = paste0("k = ", estimates, " (", studies, ")"),
+      color = warm_cold
+    ), 
+    hjust = 1.05, size = 7, show.legend = FALSE
+  ) +
+  facet_wrap(~ trait_type, ncol = 1, scales = "free_y") +
+  scale_fill_manual(values = c("#06B4BA", "#E80756")) +
+  scale_color_manual(values = c("#06B4BA", "#E80756")) +
   labs(x = "Number of generations of common garden", y = "", col = "Regime") +
   theme_bw() + 
-  scale_size_continuous(range = c(4, 10))+ 
-  theme(text = element_text(size = 30, color = "black"),
-          legend.title = ggplot2::element_text(size = 18),
-          legend.text = ggplot2::element_text(size = 16),
-          axis.text.y = ggplot2::element_text(size = 20, 
-                colour = "black", hjust = 0.5),
-          axis.text.x = ggplot2::element_text(size = 20),
-        panel.border = element_rect(color = "black", size = 1.5),
-        strip.background = element_blank(),
-        strip.text = element_text(color = "black", size = 28),
-        plot.margin = unit(c(1.5, 1, 0, 0.5), "cm")) +
-    guides(fill = "none", size = "none", color = "none")+
-    coord_cartesian(ylim = c(-1.5, 1.5),
-                    xlim = c(0, 11.5))
+  scale_size_continuous(range = c(4, 10)) + 
+  theme(
+    text = element_text(size = 30, color = "black"),
+    legend.title = ggplot2::element_text(size = 18),
+    legend.text = ggplot2::element_text(size = 16),
+    axis.text.y = ggplot2::element_text(size = 20, colour = "black", hjust = 0.5),
+    axis.text.x = ggplot2::element_text(size = 20),
+    panel.border = element_rect(color = "black", size = 1.5),
+    strip.background = element_blank(),
+    strip.text = element_text(color = "black", size = 28),
+    plot.margin = unit(c(1.5, 1, 0, 0.5), "cm")
+  ) +
+  guides(fill = "none", size = "none", color = "none") +
+  coord_cartesian(xlim = c(0, 11.5))
 
 ##################### Initial population size ##################################
 
@@ -8193,157 +8528,98 @@ sample_sizes_pop_size <- data %>%
   )
 
 # Plot
+facet_limits_pop <- make_facet_limits(
+  data_points = data %>% dplyr::filter(is.na(pop_size) == FALSE),
+  data_preds = emmeans_pop_size,
+  buffer = 0.05,
+  cap = 1.6
+)
+
+plot_data_pop <- clip_plot_data(
+  data_points = data %>% dplyr::filter(is.na(pop_size) == FALSE),
+  data_preds = emmeans_pop_size,
+  facet_limits = facet_limits_pop
+)
+
+sample_sizes_pop <- make_sample_size_positions(
+  sample_sizes_df = sample_sizes_pop_size,
+  facet_limits = facet_limits_pop
+)
+
 pop_size <- 
 ggplot() + 
-    geom_hline(yintercept = 0, # Horizontal line
-               linetype = 2, 
-               colour = "black", 
-               alpha = 0.75) + 
-    geom_point(data = data,  # Effect sizes, scaled by precision
-                  aes(x = pop_size, 
-                      y = lnRR, 
-                      size = 1/sqrt(var_lnRR), 
-                      fill = warm_cold), 
-                  shape = 21, 
-                  alpha = 0.7, 
-                  stroke = 1,
-                  position = position_jitter(width = 0.05)) + 
-     geom_ribbon(data = emmeans_pop_size, # Shaded area for credible intervals
-                 aes(x = pop_size,
-                     ymin = lower.HPD, 
-                     ymax = upper.HPD, 
-                     fill = warm_cold,
-                     group = warm_cold), 
-                 alpha = .5) + 
-     geom_line(data = emmeans_pop_size, # Predicted regression line
-               aes(y = emmean,
-                   x = pop_size,
-                   color = warm_cold,
-                   group = warm_cold), 
-               size = 1.5) +  
-     geom_text(data = sample_sizes_pop_size, 
-              aes(x = Inf, 
-                  y = ifelse(warm_cold == "Warm", -0.9, -1.3),  # Sample sizes
-                  label = paste0("k = ", estimates, " (", studies, ")"),
-                  color = warm_cold), 
-              hjust = 1.05, size = 5, show.legend = FALSE) +
-  facet_wrap(~ trait_type, ncol = 1) +  # Different panels for each trait
-  scale_fill_manual(values = c("#06B4BA", "#E80756"))+
-  scale_color_manual(values = c("#06B4BA", "#E80756"))+
+  geom_blank(data = facet_limits_pop, aes(x = 0, y = ymin)) +
+  geom_blank(data = facet_limits_pop, aes(x = 0, y = ymax)) +
+  geom_hline(yintercept = 0, linetype = 2, colour = "black", alpha = 0.75) + 
+  geom_point(
+    data = plot_data_pop$points,
+    aes(
+      x = pop_size, 
+      y = lnRR, 
+      size = 1 / sqrt(var_lnRR), 
+      fill = warm_cold
+    ), 
+    shape = 21, 
+    alpha = 0.7, 
+    stroke = 1,
+    position = position_jitter(width = 0.05)
+  ) + 
+  geom_ribbon(
+    data = plot_data_pop$preds,
+    aes(
+      x = pop_size,
+      ymin = y_lower_plot, 
+      ymax = y_upper_plot, 
+      fill = warm_cold,
+      group = warm_cold
+    ), 
+    alpha = .5
+  ) + 
+  geom_line(
+    data = plot_data_pop$preds,
+    aes(
+      y = y_mean_plot,
+      x = pop_size,
+      color = warm_cold,
+      group = warm_cold
+    ), 
+    size = 1.5
+  ) +  
+  geom_text(
+    data = sample_sizes_pop, 
+    aes(
+      x = Inf, 
+      y = y,
+      label = paste0("k = ", estimates, " (", studies, ")"),
+      color = warm_cold
+    ), 
+    hjust = 1.05, size = 7, show.legend = FALSE
+  ) +
+  facet_wrap(~ trait_type, ncol = 1, scales = "free_y") +
+  scale_fill_manual(values = c("#06B4BA", "#E80756")) +
+  scale_color_manual(values = c("#06B4BA", "#E80756")) +
   labs(x = "Population size", y = "", col = "Regime") +
   theme_bw() + 
-  scale_size_continuous(range = c(4, 10))+ 
-  theme(text = element_text(size = 30, color = "black"),
-          legend.title = ggplot2::element_text(size = 18),
-          legend.text = ggplot2::element_text(size = 16),
-          axis.text.y = ggplot2::element_text(size = 20, 
-                colour = "black", hjust = 0.5),
-          axis.text.x = ggplot2::element_text(size = 20),
-        panel.border = element_rect(color = "black", size = 1.5),
-        strip.background = element_blank(),
-        strip.text = element_text(color = "black", size = 28),
-        plot.margin = unit(c(0, 1, 0, 0.5), "cm")) +
-    guides(fill = "none", size = "none", color = "none")+
-    coord_cartesian(ylim = c(-1.5, 1.5))
-
-##################### Full model ##################################
-
-# Generate predictions at the mean of each moderator
-emmeans_full_model <- as.data.frame(emmeans(
-  lnRR_model_all_moderators,
-  specs = ~ assay_temp_diff * select_temp_diff * gen_selection * gen_common_garden | trait_type * warm_cold,
-   at = list(assay_temp_diff = seq(min(data$assay_temp_diff), max(data$assay_temp_diff), by = 0.5)))) 
+  scale_size_continuous(range = c(4, 10)) + 
+  theme(
+    text = element_text(size = 30, color = "black"),
+    legend.title = ggplot2::element_text(size = 18),
+    legend.text = ggplot2::element_text(size = 16),
+    axis.text.y = ggplot2::element_text(size = 20, colour = "black", hjust = 0.5),
+    axis.text.x = ggplot2::element_text(size = 20),
+    panel.border = element_rect(color = "black", size = 1.5),
+    strip.background = element_blank(),
+    strip.text = element_text(color = "black", size = 28),
+    plot.margin = unit(c(0, 1, 0, 0.5), "cm")
+  ) +
+  guides(fill = "none", size = "none", color = "none")
 
 
-# Calculate range of values for each category
-range_df <- data %>%
-  group_by(trait_type, warm_cold) %>%
-  summarize(
-    min_assay_temp_diff = min(assay_temp_diff),
-    max_assay_temp_diff = max(assay_temp_diff)
-  )
+(sel_temp_diff | pop_size) / (gen_selection | gen_common_garden)
 
-emmeans_full_model$trait_type <- factor(emmeans_full_model$trait_type, 
-                          levels = c("body_size", "fecundity", "survival"), 
-                          labels = c("Body size", "Fecundity", "Survival"))
+ggsave(file = "fig/figure_4.svg", width = 20, height = 26, dpi = 500)
 
-emmeans_full_model$warm_cold <- factor(emmeans_full_model$warm_cold, 
-                          levels = c("cold", "warm"), 
-                          labels = c("Cold", "Warm"))
-
-# Tailor predictions to the range of the data
-emmeans_full_model <- emmeans_full_model%>%
-  left_join(range_df, by = c("trait_type", "warm_cold")) %>%
-  filter(
-    assay_temp_diff >= min_assay_temp_diff,
-    assay_temp_diff <= max_assay_temp_diff
-  )
-
-# Plot
-assay_temp <-
-ggplot() + 
-    geom_hline(yintercept = 0, # Horizontal line
-               linetype = 2, 
-               colour = "black", 
-               alpha = 0.75) +  
-    geom_vline(xintercept = 0, # Vertical line
-               linetype = 2, 
-               colour = "black", 
-               alpha = 0.75) + 
-    geom_point(data = data, # Effect sizes, scaled by precision
-                  aes(x = assay_temp_diff, 
-                      y = lnRR, 
-                      size = 1/sqrt(var_lnRR), 
-                      fill = warm_cold), 
-                  shape = 21, 
-                  alpha = 0.7, 
-                  stroke = 1,
-                  position = position_jitter(width = 0.05)) + 
-     geom_ribbon(data = emmeans_full_model, # Shaded area for credible intervals
-                 aes(x = assay_temp_diff,
-                     ymin = lower.HPD, 
-                     ymax = upper.HPD, 
-                     fill = warm_cold,
-                     group = warm_cold), 
-                 alpha = .5) + 
-     geom_line(data = emmeans_full_model,  # Predicted regression line
-               aes(y = emmean,
-                   x = assay_temp_diff,
-                   color = warm_cold,
-                   group = warm_cold), 
-               size = 1.5) + 
-    geom_text(data = sample_sizes, 
-              aes(x = Inf, 
-                  y = ifelse(warm_cold == "Warm", -2, -2.75),  # Sample sizes
-                  label = paste0("k = ", estimates, " (", studies, ")"),
-                  color = warm_cold), 
-              hjust = 1.05, size = 5, show.legend = FALSE) +
-  
-  facet_wrap(~ trait_type, ncol = 1) + # Different panels for each trait
-  scale_fill_manual(values = c("#06B4BA", "#E80756"))+
-  scale_color_manual(values = c("#06B4BA", "#E80756"))+
-  labs(x = "Assay temperature difference", y = "lnRR",
-       col = "Regime") +
-  theme_bw() + 
-  scale_size_continuous(range = c(4, 10))+ 
-  theme(text = element_text(size = 30, color = "black"),
-          legend.title = ggplot2::element_text(size = 18),
-          legend.text = ggplot2::element_text(size = 16),
-          axis.text.y = ggplot2::element_text(size = 20, 
-                colour = "black", hjust = 0.5),
-          axis.text.x = ggplot2::element_text(size = 20),
-        panel.border = element_rect(color = "black", size = 1.5),
-        strip.background = element_blank(),
-        strip.text = element_text(color = "black", size = 28)) +
-    guides(fill = "none", size = "none", col = "none")+
-    coord_cartesian(ylim = c(-1.5, 1.5))
-
-
-assay_temp / (sel_temp_diff | pop_size) / (gen_selection | gen_common_garden)
-
-ggsave(file = "fig/figure_4.png", width = 20, height = 32, dpi = 500)
 ```
-
 
 ## **Figure 5** 
 
@@ -8383,49 +8659,2078 @@ emmeans_assay_temp_diff <- emmeans_assay_temp_diff %>%
   )
 
 # Plot
+facet_limits_vr <- make_facet_limits(
+  data_points = data,
+  data_preds = emmeans_assay_temp_diff,
+  y_point = "lnVR",
+  y_lower = "lower.HPD",
+  y_upper = "upper.HPD",
+  buffer = 0.05,
+  cap = 3.5
+)
+
+plot_data_vr <- clip_plot_data(
+  data_points = data,
+  data_preds = emmeans_assay_temp_diff,
+  facet_limits = facet_limits_vr,
+  y_point = "lnVR",
+  y_mean = "emmean",
+  y_lower = "lower.HPD",
+  y_upper = "upper.HPD"
+)
+
+sample_sizes_vr <- make_sample_size_positions(
+  sample_sizes_df = sample_sizes,
+  facet_limits = facet_limits_vr
+)
+
+ggplot() + 
+  geom_blank(data = facet_limits_vr, aes(x = 0, y = ymin)) +
+  geom_blank(data = facet_limits_vr, aes(x = 0, y = ymax)) +
+  geom_hline(yintercept = 0, linetype = 2, colour = "black", alpha = 0.75) +  
+  geom_vline(xintercept = 0, linetype = 2, colour = "black", alpha = 0.75) + 
+  geom_point(
+    data = plot_data_vr$points,
+    aes(
+      x = assay_temp_diff, 
+      y = lnVR, 
+      size = 1 / sqrt(var_lnVR), 
+      fill = warm_cold
+    ), 
+    shape = 21, 
+    alpha = 0.7, 
+    stroke = 1,
+    position = position_jitter(width = 0.05)
+  ) + 
+  geom_ribbon(
+    data = plot_data_vr$preds,
+    aes(
+      x = assay_temp_diff,
+      ymin = y_lower_plot, 
+      ymax = y_upper_plot, 
+      fill = warm_cold,
+      group = warm_cold
+    ), 
+    alpha = .5
+  ) + 
+  geom_line(
+    data = plot_data_vr$preds,
+    aes(
+      y = y_mean_plot,
+      x = assay_temp_diff,
+      color = warm_cold,
+      group = warm_cold
+    ), 
+    size = 1.5
+  ) + 
+  geom_text(
+    data = sample_sizes_vr, 
+    aes(
+      x = Inf, 
+      y = y,
+      label = paste0("k = ", estimates, " (", studies, ")"),
+      color = warm_cold
+    ), 
+    hjust = 1.05,
+    size = 5,
+    show.legend = FALSE
+  ) +
+  facet_wrap(~ trait_type, ncol = 1, scales = "free_y") +
+  scale_fill_manual(values = c("#06B4BA", "#E80756")) +
+  scale_color_manual(values = c("#06B4BA", "#E80756")) +
+  labs(
+    x = "Assay temperature difference",
+    y = "lnVR",
+    col = "Regime"
+  ) +
+  theme_bw() + 
+  scale_size_continuous(range = c(2, 8)) + 
+  theme(
+    text = element_text(size = 25, color = "black"),
+    legend.title = ggplot2::element_text(size = 18),
+    legend.text = ggplot2::element_text(size = 16),
+    axis.text.y = ggplot2::element_text(size = 20, colour = "black", hjust = 0.5),
+    axis.text.x = ggplot2::element_text(size = 20),
+    panel.border = element_rect(color = "black", size = 1.5),
+    strip.background = element_blank(),
+    strip.text = element_text(color = "black", size = 22)
+  ) +
+  guides(fill = "none", col = "none", size = "none")
+
+ggsave(file = "fig/figure_5.svg", width = 10, height = 10, dpi = 500)
+```
+
+
+## **Figure 6**
+
+```{r, fig.width = 20, fig.height = 26}
+# Load models
+lnVR_model_sel_temp_diff <- readRDS("RData/lnVR_model_sel_temp_diff.rds")
+lnVR_model_gen_selection <- readRDS("RData/lnVR_model_gen_selection.rds")
+lnVR_model_gen_common_garden <- readRDS("RData/lnVR_model_gen_common_garden.rds")
+lnVR_model_pop_size <- readRDS("RData/lnVR_model_pop_size.rds")
+
+# For figures
+trait_levels_raw <- c("body_size", "fecundity", "survival")
+trait_levels_lab <- c("Body size", "Fecundity", "Survival")
+
+warm_levels_raw <- c("cold", "warm")
+warm_levels_lab <- c("Cold", "Warm")
+
+##################### Selection temperature ################################
+
+data_plot <- data
+sample_sizes_plot <- sample_sizes
+
+# Generate predictions
+emmeans_sel_temp_diff <- as.data.frame(
+  emmeans(
+    lnVR_model_sel_temp_diff,
+    specs = ~ select_temp_diff | trait_type * warm_cold,
+    at = list(
+      select_temp_diff = seq(
+        min(data$select_temp_diff, na.rm = TRUE),
+        max(data$select_temp_diff, na.rm = TRUE),
+        by = 0.1
+      ),
+      assay_temp_diff = 0
+    )
+  )
+)
+
+# Standardise labels in predictions
+emmeans_sel_temp_diff <- emmeans_sel_temp_diff %>%
+  dplyr::mutate(
+    trait_type = factor(trait_type,
+      levels = trait_levels_raw,
+      labels = trait_levels_lab
+    ),
+    warm_cold = factor(warm_cold,
+      levels = warm_levels_raw,
+      labels = warm_levels_lab
+    )
+  )
+
+# Calculate range of observed x values by facet/group
+range_df_sel_temp_diff <- data_plot %>%
+  dplyr::filter(!is.na(select_temp_diff)) %>%
+  dplyr::group_by(trait_type, warm_cold) %>%
+  dplyr::summarise(
+    min_select_temp_diff = min(select_temp_diff, na.rm = TRUE),
+    max_select_temp_diff = max(select_temp_diff, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+# Tailor predictions to observed x range
+emmeans_sel_temp_diff <- emmeans_sel_temp_diff %>%
+  dplyr::left_join(range_df_sel_temp_diff, by = c("trait_type", "warm_cold")) %>%
+  dplyr::filter(
+    select_temp_diff >= min_select_temp_diff,
+    select_temp_diff <= max_select_temp_diff
+  )
+
+# Facet-specific y limits
+facet_limits_sel_temp_diff <- make_facet_limits(
+  data_points = data_plot %>% dplyr::filter(!is.na(select_temp_diff)),
+  data_preds = emmeans_sel_temp_diff,
+  y_point = "lnVR",
+  y_lower = "lower.HPD",
+  y_upper = "upper.HPD",
+  buffer = 0.05,
+  cap = 3.5
+)
+
+# Clip data to those limits
+plot_data_sel_temp_diff <- clip_plot_data(
+  data_points = data_plot %>% dplyr::filter(!is.na(select_temp_diff)),
+  data_preds = emmeans_sel_temp_diff,
+  facet_limits = facet_limits_sel_temp_diff,
+  y_point = "lnVR",
+  y_mean = "emmean",
+  y_lower = "lower.HPD",
+  y_upper = "upper.HPD"
+)
+
+# Sample size label positions
+sample_sizes_sel_temp_diff <- make_sample_size_positions(
+  sample_sizes_df = sample_sizes_plot,
+  facet_limits = facet_limits_sel_temp_diff
+)
+
+sel_temp_diff <- ggplot() +
+  geom_blank(data = facet_limits_sel_temp_diff, aes(x = 0, y = ymin)) +
+  geom_blank(data = facet_limits_sel_temp_diff, aes(x = 0, y = ymax)) +
+  geom_hline(yintercept = 0, linetype = 2, colour = "black", alpha = 0.75) +
+  geom_point(
+    data = plot_data_sel_temp_diff$points,
+    aes(
+      x = select_temp_diff,
+      y = lnVR,
+      size = 1 / sqrt(var_lnVR),
+      fill = warm_cold
+    ),
+    shape = 21,
+    alpha = 0.7,
+    stroke = 1,
+    position = position_jitter(width = 0.05)
+  ) +
+  geom_ribbon(
+    data = plot_data_sel_temp_diff$preds,
+    aes(
+      x = select_temp_diff,
+      ymin = y_lower_plot,
+      ymax = y_upper_plot,
+      fill = warm_cold,
+      group = warm_cold
+    ),
+    alpha = 0.5
+  ) +
+  geom_line(
+    data = plot_data_sel_temp_diff$preds,
+    aes(
+      x = select_temp_diff,
+      y = y_mean_plot,
+      colour = warm_cold,
+      group = warm_cold
+    ),
+    size = 1.5
+  ) +
+  geom_text(
+    data = sample_sizes_sel_temp_diff,
+    aes(
+      x = Inf,
+      y = y,
+      label = paste0("k = ", estimates, " (", studies, ")"),
+      colour = warm_cold
+    ),
+    hjust = 1.05,
+    size = 7,
+    show.legend = FALSE
+  ) +
+  facet_wrap(~ trait_type, ncol = 1, scales = "free_y") +
+  scale_fill_manual(values = c("#06B4BA", "#E80756")) +
+  scale_color_manual(values = c("#06B4BA", "#E80756")) +
+  labs(x = "Selection temperature difference", y = "lnVR", col = "Regime") +
+  theme_bw() +
+  scale_size_continuous(range = c(2, 8)) +
+  theme(
+    text = element_text(size = 30, color = "black"),
+    legend.title = ggplot2::element_text(size = 18),
+    legend.text = ggplot2::element_text(size = 16),
+    axis.text.y = ggplot2::element_text(size = 20, colour = "black", hjust = 0.5),
+    axis.text.x = ggplot2::element_text(size = 20),
+    panel.border = element_rect(color = "black", size = 1.5),
+    strip.background = element_blank(),
+    strip.text = element_text(color = "black", size = 28),
+    plot.margin = unit(c(1, 0, 0, 0), "cm")
+  ) +
+  guides(fill = "none", size = "none", color = "none")
+
+############### Number of generations of selection ################
+
+emmeans_gen_selection <- as.data.frame(
+  emmeans(
+    lnVR_model_gen_selection,
+    specs = ~ gen_selection | trait_type * warm_cold,
+    at = list(
+      gen_selection = seq(
+        min(data$gen_selection, na.rm = TRUE),
+        max(data$gen_selection, na.rm = TRUE),
+        by = 1
+      ),
+      assay_temp_diff = 0
+    )
+  )
+)
+
+emmeans_gen_selection <- emmeans_gen_selection %>%
+  dplyr::mutate(
+    trait_type = factor(trait_type,
+      levels = trait_levels_raw,
+      labels = trait_levels_lab
+    ),
+    warm_cold = factor(warm_cold,
+      levels = warm_levels_raw,
+      labels = warm_levels_lab
+    )
+  )
+
+range_df_gen_selection <- data_plot %>%
+  dplyr::filter(!is.na(gen_selection)) %>%
+  dplyr::group_by(trait_type, warm_cold) %>%
+  dplyr::summarise(
+    min_gen_selection = min(gen_selection, na.rm = TRUE),
+    max_gen_selection = max(gen_selection, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+emmeans_gen_selection <- emmeans_gen_selection %>%
+  dplyr::left_join(range_df_gen_selection, by = c("trait_type", "warm_cold")) %>%
+  dplyr::filter(
+    gen_selection >= min_gen_selection,
+    gen_selection <= max_gen_selection
+  )
+
+facet_limits_gen_selection <- make_facet_limits(
+  data_points = data_plot %>% dplyr::filter(!is.na(gen_selection)),
+  data_preds = emmeans_gen_selection,
+  y_point = "lnVR",
+  y_lower = "lower.HPD",
+  y_upper = "upper.HPD",
+  buffer = 0.05,
+  cap = 3.5
+)
+
+plot_data_gen_selection <- clip_plot_data(
+  data_points = data_plot %>% dplyr::filter(!is.na(gen_selection)),
+  data_preds = emmeans_gen_selection,
+  facet_limits = facet_limits_gen_selection,
+  y_point = "lnVR",
+  y_mean = "emmean",
+  y_lower = "lower.HPD",
+  y_upper = "upper.HPD"
+)
+
+sample_sizes_gen_selection <- make_sample_size_positions(
+  sample_sizes_df = sample_sizes_plot,
+  facet_limits = facet_limits_gen_selection
+)
+
+gen_selection <- ggplot() +
+  geom_blank(data = facet_limits_gen_selection, aes(x = 0, y = ymin)) +
+  geom_blank(data = facet_limits_gen_selection, aes(x = 0, y = ymax)) +
+  geom_hline(yintercept = 0, linetype = 2, colour = "black", alpha = 0.75) +
+  geom_point(
+    data = plot_data_gen_selection$points,
+    aes(
+      x = gen_selection,
+      y = lnVR,
+      size = 1 / sqrt(var_lnVR),
+      fill = warm_cold
+    ),
+    shape = 21,
+    alpha = 0.7,
+    stroke = 1,
+    position = position_jitter(width = 0.05)
+  ) +
+  geom_ribbon(
+    data = plot_data_gen_selection$preds,
+    aes(
+      x = gen_selection,
+      ymin = y_lower_plot,
+      ymax = y_upper_plot,
+      fill = warm_cold,
+      group = warm_cold
+    ),
+    alpha = 0.5
+  ) +
+  geom_line(
+    data = plot_data_gen_selection$preds,
+    aes(
+      x = gen_selection,
+      y = y_mean_plot,
+      colour = warm_cold,
+      group = warm_cold
+    ),
+    size = 1.5
+  ) +
+  geom_text(
+    data = sample_sizes_gen_selection,
+    aes(
+      x = Inf,
+      y = y,
+      label = paste0("k = ", estimates, " (", studies, ")"),
+      colour = warm_cold
+    ),
+    hjust = 1.05,
+    size = 7,
+    show.legend = FALSE
+  ) +
+  facet_wrap(~ trait_type, ncol = 1, scales = "free_y") +
+  scale_fill_manual(values = c("#06B4BA", "#E80756")) +
+  scale_color_manual(values = c("#06B4BA", "#E80756")) +
+  labs(x = "Number of generations of selection", y = "lnVR", col = "Regime") +
+  theme_bw() +
+  scale_size_continuous(range = c(2, 8)) +
+  theme(
+    text = element_text(size = 30, color = "black"),
+    legend.title = ggplot2::element_text(size = 18),
+    legend.text = ggplot2::element_text(size = 16),
+    axis.text.y = ggplot2::element_text(size = 20, colour = "black", hjust = 0.5),
+    axis.text.x = ggplot2::element_text(size = 20),
+    panel.border = element_rect(color = "black", size = 1.5),
+    strip.background = element_blank(),
+    strip.text = element_text(color = "black", size = 28),
+    plot.margin = unit(c(1.5, 0, 0, 0), "cm")
+  ) +
+  guides(fill = "none", size = "none", color = "none") +
+  coord_cartesian(xlim = c(0, 150))
+
+
+############# Number of generations of common garden ####################
+
+emmeans_gen_common_garden <- as.data.frame(
+  emmeans(
+    lnVR_model_gen_common_garden,
+    specs = ~ gen_common_garden | trait_type * warm_cold,
+    at = list(
+      gen_common_garden = seq(
+        min(data$gen_common_garden, na.rm = TRUE),
+        max(data$gen_common_garden, na.rm = TRUE),
+        by = 1
+      ),
+      assay_temp_diff = 0
+    )
+  )
+)
+
+emmeans_gen_common_garden <- emmeans_gen_common_garden %>%
+  dplyr::mutate(
+    trait_type = factor(trait_type,
+      levels = trait_levels_raw,
+      labels = trait_levels_lab
+    ),
+    warm_cold = factor(warm_cold,
+      levels = warm_levels_raw,
+      labels = warm_levels_lab
+    )
+  )
+
+range_df_gen_common_garden <- data_plot %>%
+  dplyr::filter(!is.na(gen_common_garden)) %>%
+  dplyr::group_by(trait_type, warm_cold) %>%
+  dplyr::summarise(
+    min_gen_common_garden = min(gen_common_garden, na.rm = TRUE),
+    max_gen_common_garden = max(gen_common_garden, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+emmeans_gen_common_garden <- emmeans_gen_common_garden %>%
+  dplyr::left_join(range_df_gen_common_garden, by = c("trait_type", "warm_cold")) %>%
+  dplyr::filter(
+    gen_common_garden >= min_gen_common_garden,
+    gen_common_garden <= max_gen_common_garden
+  )
+
+facet_limits_gen_common_garden <- make_facet_limits(
+  data_points = data_plot %>% dplyr::filter(!is.na(gen_common_garden)),
+  data_preds = emmeans_gen_common_garden,
+  y_point = "lnVR",
+  y_lower = "lower.HPD",
+  y_upper = "upper.HPD",
+  buffer = 0.05,
+  cap = 3.5
+)
+
+plot_data_gen_common_garden <- clip_plot_data(
+  data_points = data_plot %>% dplyr::filter(!is.na(gen_common_garden)),
+  data_preds = emmeans_gen_common_garden,
+  facet_limits = facet_limits_gen_common_garden,
+  y_point = "lnVR",
+  y_mean = "emmean",
+  y_lower = "lower.HPD",
+  y_upper = "upper.HPD"
+)
+
+sample_sizes_gen_common_garden <- make_sample_size_positions(
+  sample_sizes_df = sample_sizes_plot,
+  facet_limits = facet_limits_gen_common_garden
+)
+
+gen_common_garden <- ggplot() +
+  geom_blank(data = facet_limits_gen_common_garden, aes(x = 0, y = ymin)) +
+  geom_blank(data = facet_limits_gen_common_garden, aes(x = 0, y = ymax)) +
+  geom_hline(yintercept = 0, linetype = 2, colour = "black", alpha = 0.75) +
+  geom_point(
+    data = plot_data_gen_common_garden$points,
+    aes(
+      x = gen_common_garden,
+      y = lnVR,
+      size = 1 / sqrt(var_lnVR),
+      fill = warm_cold
+    ),
+    shape = 21,
+    alpha = 0.7,
+    stroke = 1,
+    position = position_jitter(width = 0.05)
+  ) +
+  geom_ribbon(
+    data = plot_data_gen_common_garden$preds,
+    aes(
+      x = gen_common_garden,
+      ymin = y_lower_plot,
+      ymax = y_upper_plot,
+      fill = warm_cold,
+      group = warm_cold
+    ),
+    alpha = 0.5
+  ) +
+  geom_line(
+    data = plot_data_gen_common_garden$preds,
+    aes(
+      x = gen_common_garden,
+      y = y_mean_plot,
+      colour = warm_cold,
+      group = warm_cold
+    ),
+    size = 1.5
+  ) +
+  geom_text(
+    data = sample_sizes_gen_common_garden,
+    aes(
+      x = Inf,
+      y = y,
+      label = paste0("k = ", estimates, " (", studies, ")"),
+      colour = warm_cold
+    ),
+    hjust = 1.05,
+    size = 7,
+    show.legend = FALSE
+  ) +
+  facet_wrap(~ trait_type, ncol = 1, scales = "free_y") +
+  scale_fill_manual(values = c("#06B4BA", "#E80756")) +
+  scale_color_manual(values = c("#06B4BA", "#E80756")) +
+  labs(x = "Number of generations of common garden", y = "", col = "Regime") +
+  theme_bw() +
+  scale_size_continuous(range = c(2, 8)) +
+  theme(
+    text = element_text(size = 30, color = "black"),
+    legend.title = ggplot2::element_text(size = 18),
+    legend.text = ggplot2::element_text(size = 16),
+    axis.text.y = ggplot2::element_text(size = 20, colour = "black", hjust = 0.5),
+    axis.text.x = ggplot2::element_text(size = 20),
+    panel.border = element_rect(color = "black", size = 1.5),
+    strip.background = element_blank(),
+    strip.text = element_text(color = "black", size = 28),
+    plot.margin = unit(c(1.5, 1, 0, 0.5), "cm")
+  ) +
+  guides(fill = "none", size = "none", color = "none") +
+  coord_cartesian(xlim = c(0, 11.5))
+
+
+############# Population size ####################
+
+emmeans_pop_size <- as.data.frame(
+  emmeans(
+    lnVR_model_pop_size,
+    specs = ~ pop_size | trait_type * warm_cold,
+    at = list(
+      pop_size = seq(
+        min(data$pop_size, na.rm = TRUE),
+        max(data$pop_size, na.rm = TRUE),
+        by = 50
+      ),
+      assay_temp_diff = 0
+    )
+  )
+)
+
+emmeans_pop_size <- emmeans_pop_size %>%
+  dplyr::mutate(
+    trait_type = factor(trait_type,
+      levels = trait_levels_raw,
+      labels = trait_levels_lab
+    ),
+    warm_cold = factor(warm_cold,
+      levels = warm_levels_raw,
+      labels = warm_levels_lab
+    )
+  )
+
+range_df_pop_size <- data_plot %>%
+  dplyr::filter(!is.na(pop_size)) %>%
+  dplyr::group_by(trait_type, warm_cold) %>%
+  dplyr::summarise(
+    min_pop_size = min(pop_size, na.rm = TRUE),
+    max_pop_size = max(pop_size, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+emmeans_pop_size <- emmeans_pop_size %>%
+  dplyr::left_join(range_df_pop_size, by = c("trait_type", "warm_cold")) %>%
+  dplyr::filter(
+    pop_size >= min_pop_size,
+    pop_size <= max_pop_size
+  )
+
+sample_sizes_pop_size <- data_plot %>%
+  dplyr::filter(!is.na(pop_size)) %>%
+  dplyr::group_by(trait_type, warm_cold) %>%
+  dplyr::summarise(
+    estimates = dplyr::n(),
+    studies = dplyr::n_distinct(ref),
+    .groups = "drop"
+  )
+
+facet_limits_pop_size <- make_facet_limits(
+  data_points = data_plot %>% dplyr::filter(!is.na(pop_size)),
+  data_preds = emmeans_pop_size,
+  y_point = "lnVR",
+  y_lower = "lower.HPD",
+  y_upper = "upper.HPD",
+  buffer = 0.05,
+  cap = 3.5
+)
+
+plot_data_pop_size <- clip_plot_data(
+  data_points = data_plot %>% dplyr::filter(!is.na(pop_size)),
+  data_preds = emmeans_pop_size,
+  facet_limits = facet_limits_pop_size,
+  y_point = "lnVR",
+  y_mean = "emmean",
+  y_lower = "lower.HPD",
+  y_upper = "upper.HPD"
+)
+
+sample_sizes_pop_size_pos <- make_sample_size_positions(
+  sample_sizes_df = sample_sizes_pop_size,
+  facet_limits = facet_limits_pop_size
+)
+
+pop_size <- ggplot() +
+  geom_blank(data = facet_limits_pop_size, aes(x = 0, y = ymin)) +
+  geom_blank(data = facet_limits_pop_size, aes(x = 0, y = ymax)) +
+  geom_hline(yintercept = 0, linetype = 2, colour = "black", alpha = 0.75) +
+  geom_point(
+    data = plot_data_pop_size$points,
+    aes(
+      x = pop_size,
+      y = lnVR,
+      size = 1 / sqrt(var_lnVR),
+      fill = warm_cold
+    ),
+    shape = 21,
+    alpha = 0.7,
+    stroke = 1,
+    position = position_jitter(width = 0.05)
+  ) +
+  geom_ribbon(
+    data = plot_data_pop_size$preds,
+    aes(
+      x = pop_size,
+      ymin = y_lower_plot,
+      ymax = y_upper_plot,
+      fill = warm_cold,
+      group = warm_cold
+    ),
+    alpha = 0.5
+  ) +
+  geom_line(
+    data = plot_data_pop_size$preds,
+    aes(
+      x = pop_size,
+      y = y_mean_plot,
+      colour = warm_cold,
+      group = warm_cold
+    ),
+    size = 1.5
+  ) +
+  geom_text(
+    data = sample_sizes_pop_size_pos,
+    aes(
+      x = Inf,
+      y = y,
+      label = paste0("k = ", estimates, " (", studies, ")"),
+      colour = warm_cold
+    ),
+    hjust = 1.05,
+    size = 7,
+    show.legend = FALSE
+  ) +
+  facet_wrap(~ trait_type, ncol = 1, scales = "free_y") +
+  scale_fill_manual(values = c("#06B4BA", "#E80756")) +
+  scale_color_manual(values = c("#06B4BA", "#E80756")) +
+  labs(x = "Population size", y = "", col = "Regime") +
+  theme_bw() +
+  scale_size_continuous(range = c(2, 8)) +
+  theme(
+    text = element_text(size = 30, color = "black"),
+    legend.title = ggplot2::element_text(size = 18),
+    legend.text = ggplot2::element_text(size = 16),
+    axis.text.y = ggplot2::element_text(size = 20, colour = "black", hjust = 0.5),
+    axis.text.x = ggplot2::element_text(size = 20),
+    panel.border = element_rect(color = "black", size = 1.5),
+    strip.background = element_blank(),
+    strip.text = element_text(color = "black", size = 28),
+    plot.margin = unit(c(0, 1, 0, 0.5), "cm")
+  ) +
+  guides(fill = "none", size = "none", color = "none")
+
+(sel_temp_diff | pop_size) / (gen_selection | gen_common_garden)
+
+ggsave(file = "fig/figure_6.svg", width = 20, height = 26, dpi = 400)
+```
+
+# **Supplementary figures** 
+
+Figure S1 and S2 were made in Powerpoint.
+
+## **Figure S3**
+
+```{r}
+# Prepare data
+plot_dat <- data %>%
+  dplyr::mutate(
+    precision = 1 / sqrt(var_lnRR),
+    weight = 1 / var_lnRR,
+    warm_cold = factor(warm_cold, levels = c("Cold", "Warm")),
+    trait_type = factor(trait_type, levels = c("Body size", "Fecundity", "Survival")),
+    ref = gsub("_", " ", ref)
+  )
+# Calculate weighted mean lnRR and 95% CI
+#   within each study, trait, and temperature regime
+study_sum <- plot_dat %>%
+  dplyr::group_by(trait_type, ref, warm_cold) %>%
+  dplyr::summarise(
+    mean_lnRR = sum(lnRR * weight) / sum(weight),
+    se_lnRR   = sqrt(1 / sum(weight)),
+    lower_CI  = mean_lnRR - 1.96 * se_lnRR,
+    upper_CI  = mean_lnRR + 1.96 * se_lnRR,
+    k         = dplyr::n(),
+    .groups = "drop"
+  ) %>%
+  as.data.frame()
+
+# Order studies within each trait
+#    using the average study effect across warm/cold
+study_order <- study_sum %>%
+  dplyr::group_by(trait_type, ref) %>%
+  dplyr::summarise(
+    order_value = mean(mean_lnRR, na.rm = TRUE),
+    .groups = "drop"
+  ) %>%
+  as.data.frame()
+
+# Order studies by magnitude
+study_sum <- study_sum %>%
+  dplyr::left_join(study_order, by = c("trait_type", "ref")) %>%
+  dplyr::mutate(
+    ref_facet = tidytext::reorder_within(ref, order_value, trait_type)
+  )
+
+plot_dat <- plot_dat %>%
+  dplyr::left_join(study_order, by = c("trait_type", "ref")) %>%
+  dplyr::mutate(
+    ref_facet = tidytext::reorder_within(ref, order_value, trait_type)
+  )
+
+# Plot
+p <- ggplot() +
+  
+  geom_vline(xintercept = 0, linetype = "dashed", colour = "grey40") +
+  
+  ggbeeswarm::geom_quasirandom(
+    data = plot_dat,
+    aes(
+      x = lnRR,
+      y = ref_facet,
+      colour = warm_cold,
+      fill = warm_cold,
+      size = precision
+    ),
+    groupOnX = FALSE,
+    width = 0.22,
+    alpha = 0.45,
+    shape = 21,
+    stroke = 0.2,
+    orientation = "x"
+  ) +
+  # 
+  # geom_errorbar(   ##### Add this part to visualise mean effects per study
+  #   data = study_sum,
+  #   aes(
+  #     y = ref_facet,
+  #     xmin = lower_CI,
+  #     xmax = upper_CI,
+  #     colour = warm_cold
+  #   ),
+  #   width = 0.25,
+  #   linewidth = 1.5,
+  #   position = position_dodge(width = 0.55),
+  #   orientation = "y"
+  # ) +
+  # 
+  # geom_point(
+  #   data = study_sum,
+  #   aes(
+  #     x = mean_lnRR,
+  #     y = ref_facet,
+  #     colour = warm_cold,
+  #     fill = warm_cold
+  #   ),
+  #   size = 4,
+  #   shape = 21,
+  #   stroke = 0.35,
+  #   position = position_dodge(width = 0.55)
+  # ) +
+  
+  facet_wrap(~trait_type, ncol = 3, scales = "free") +
+  tidytext::scale_y_reordered() +
+  
+  scale_fill_manual(values = c("#06B4BA", "#E80756")) +
+  scale_color_manual(values = c("#06B4BA", "#E80756")) +
+  scale_size_continuous(range = c(2.5, 8), guide = "none") +
+  
+  labs(
+    x = "Effect size (lnRR)",
+    y = NULL,
+    colour = NULL,
+    fill = NULL
+  ) +
+theme_classic(base_size = 15) +
+theme(
+  strip.background = element_blank(),
+  strip.text = element_text(face = "bold", size = 18),
+  axis.text.x = element_text(size = 16),              
+  axis.text.y = element_text(size = 12, angle = 1, hjust = 1), 
+  axis.title.x = element_text(size = 18),         
+  panel.border = element_rect(colour = "black", fill = NA, linewidth = 1.2),  
+  legend.position = c(0.05,0.96),
+  panel.spacing = unit(1.2, "lines")
+)
+
+p
+
+ggsave("fig/figure_S3.png", height = 13, width = 15, dpi = 500)
+```
+
+
+## **Figure S4** 
+
+```{r, fig.width = 12, fig.height=10}
+# Load model
+lnRR_model_all_moderators <- readRDS("RData/lnRR_model_all_moderators.rds")
+
+# Generate predictions
+emmeans_full_model <- as.data.frame(emmeans(
+  lnRR_model_all_moderators,
+  specs = ~ assay_temp_diff * select_temp_diff * gen_selection * gen_common_garden | trait_type * warm_cold,
+   at = list(assay_temp_diff = seq(min(data$assay_temp_diff), max(data$assay_temp_diff), by = 0.5)))) 
+
+# Calculate range of values for each category
+range_df <- data %>%
+  group_by(trait_type, warm_cold) %>%
+  summarize(
+    min_assay_temp_diff = min(assay_temp_diff, na.rm = TRUE),
+    max_assay_temp_diff = max(assay_temp_diff, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+# Match emmeans coding to whatever is already in data
+emmeans_full_model$trait_type <- factor(
+  emmeans_full_model$trait_type,
+  levels = c("body_size", "fecundity", "survival"),
+  labels = c("Body size", "Fecundity", "Survival")
+)
+
+emmeans_full_model$warm_cold <- factor(
+  emmeans_full_model$warm_cold,
+  levels = c("cold", "warm"),
+  labels = c("Cold", "Warm")
+)
+
+# Tailor predictions to the range of the data
+emmeans_full_model<- emmeans_full_model %>%
+  left_join(range_df, by = c("trait_type", "warm_cold")) %>%
+  filter(
+    assay_temp_diff >= min_assay_temp_diff,
+    assay_temp_diff <= max_assay_temp_diff
+  )
+
+# Plot objects using helper functions
+facet_limits_rr <- make_facet_limits(
+  data_points = data,
+  data_preds = emmeans_full_model,
+  y_point = "lnRR",
+  y_lower = "lower.HPD",
+  y_upper = "upper.HPD",
+  buffer = 0.05,
+  cap = 1.6
+)
+
+plot_data_rr <- clip_plot_data(
+  data_points = data,
+  data_preds = emmeans_full_model,
+  facet_limits = facet_limits_rr,
+  y_point = "lnRR",
+  y_mean = "emmean",
+  y_lower = "lower.HPD",
+  y_upper = "upper.HPD"
+)
+
+sample_sizes_rr <- make_sample_size_positions(
+  sample_sizes_df = sample_sizes,
+  facet_limits = facet_limits_rr
+)
+
+ggplot() + 
+  geom_blank(data = facet_limits_rr, aes(x = 0, y = ymin)) +
+  geom_blank(data = facet_limits_rr, aes(x = 0, y = ymax)) +
+  geom_hline(yintercept = 0, linetype = 2, colour = "black", alpha = 0.75) +  
+  geom_vline(xintercept = 0, linetype = 2, colour = "black", alpha = 0.75) +  
+  geom_point(
+    data = plot_data_rr$points,
+    aes(
+      x = assay_temp_diff, 
+      y = lnRR, 
+      size = 1 / sqrt(var_lnRR), 
+      fill = warm_cold
+    ), 
+    shape = 21, 
+    alpha = 0.7, 
+    stroke = 1,
+    position = position_jitter(width = 0.05)
+  ) + 
+  geom_ribbon(
+    data = plot_data_rr$preds,
+    aes(
+      x = assay_temp_diff,
+      ymin = y_lower_plot, 
+      ymax = y_upper_plot, 
+      fill = warm_cold,
+      group = warm_cold
+    ), 
+    alpha = .5
+  ) + 
+  geom_line(
+    data = plot_data_rr$preds,
+    aes(
+      y = y_mean_plot,
+      x = assay_temp_diff,
+      color = warm_cold,
+      group = warm_cold
+    ), 
+    size = 1.5
+  ) + 
+  geom_text(
+    data = sample_sizes_rr, 
+    aes(
+      x = Inf, 
+      y = y,
+      label = paste0("k = ", estimates, " (", studies, ")"),
+      color = warm_cold
+    ), 
+    hjust = 1.05,
+    size = 5,
+    show.legend = FALSE
+  ) +
+  facet_wrap(~ trait_type, ncol = 1, scales = "free_y") +
+  scale_fill_manual(values = c("#06B4BA", "#E80756")) +
+  scale_color_manual(values = c("#06B4BA", "#E80756")) +
+  labs(
+    x = "Assay temperature difference",
+    y = "lnRR",
+    col = "Regime"
+  ) +
+  theme_bw() + 
+  scale_size_continuous(range = c(4, 10)) + 
+  theme(
+    text = element_text(size = 25, color = "black"),
+    legend.title = ggplot2::element_text(size = 18),
+    legend.text = ggplot2::element_text(size = 16),
+    axis.text.y = ggplot2::element_text(size = 20, colour = "black", hjust = 0.5),
+    axis.text.x = ggplot2::element_text(size = 20),
+    panel.border = element_rect(color = "black", size = 1.5),
+    strip.background = element_blank(),
+    strip.text = element_text(color = "black", size = 22)
+  ) +
+  guides(fill = "none", col = "none", size = "none")
+
+ggsave(file = "fig/figure_S4.png", width = 12, height = 10, dpi = 500)
+```
+
+## **Figure S5** 
+
+```{r, fig.height = 10, fig.width = 12}
+# Load models
+lnVR_model_all_moderators <- readRDS("RData/lnVR_model_all_moderators.rds")
+
+# Generate predictions
+emmeans_full_model <- as.data.frame(emmeans(
+  lnVR_model_all_moderators,
+  specs = ~ assay_temp_diff * select_temp_diff * gen_selection * gen_common_garden | trait_type * warm_cold,
+   at = list(assay_temp_diff = seq(min(data$assay_temp_diff), max(data$assay_temp_diff), by = 0.5)))) 
+
+# Calculate range of values for each category
+range_df <- data %>%
+  group_by(trait_type, warm_cold) %>%
+  summarize(
+    min_assay_temp_diff = min(assay_temp_diff, na.rm = TRUE),
+    max_assay_temp_diff = max(assay_temp_diff, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+# Match emmeans coding to whatever is already in data
+emmeans_full_model$trait_type <- factor(
+  emmeans_full_model$trait_type,
+  levels = c("body_size", "fecundity", "survival"),
+  labels = c("Body size", "Fecundity", "Survival")
+)
+
+emmeans_full_model$warm_cold <- factor(
+  emmeans_full_model$warm_cold,
+  levels = c("cold", "warm"),
+  labels = c("Cold", "Warm")
+)
+
+# Tailor predictions to the range of the data
+emmeans_full_model<- emmeans_full_model %>%
+  left_join(range_df, by = c("trait_type", "warm_cold")) %>%
+  filter(
+    assay_temp_diff >= min_assay_temp_diff,
+    assay_temp_diff <= max_assay_temp_diff
+  )
+
+# Plot objects using helper functions
+facet_limits_vr <- make_facet_limits(
+  data_points = data,
+  data_preds = emmeans_full_model,
+  y_point = "lnVR",
+  y_lower = "lower.HPD",
+  y_upper = "upper.HPD",
+  buffer = 0.05,
+  cap = 3.5
+)
+
+plot_data_vr <- clip_plot_data(
+  data_points = data,
+  data_preds = emmeans_full_model,
+  facet_limits = facet_limits_vr,
+  y_point = "lnRR",
+  y_mean = "emmean",
+  y_lower = "lower.HPD",
+  y_upper = "upper.HPD"
+)
+
+sample_sizes_vr <- make_sample_size_positions(
+  sample_sizes_df = sample_sizes,
+  facet_limits = facet_limits_vr
+)
+
+ggplot() + 
+  geom_blank(data = facet_limits_vr, aes(x = 0, y = ymin)) +
+  geom_blank(data = facet_limits_vr, aes(x = 0, y = ymax)) +
+  geom_hline(yintercept = 0, linetype = 2, colour = "black", alpha = 0.75) +  
+  geom_vline(xintercept = 0, linetype = 2, colour = "black", alpha = 0.75) +  
+  geom_point(
+    data = plot_data_vr$points,
+    aes(
+      x = assay_temp_diff, 
+      y = lnRR, 
+      size = 1 / sqrt(var_lnRR), 
+      fill = warm_cold
+    ), 
+    shape = 21, 
+    alpha = 0.7, 
+    stroke = 1,
+    position = position_jitter(width = 0.05)
+  ) + 
+  geom_ribbon(
+    data = plot_data_vr$preds,
+    aes(
+      x = assay_temp_diff,
+      ymin = y_lower_plot, 
+      ymax = y_upper_plot, 
+      fill = warm_cold,
+      group = warm_cold
+    ), 
+    alpha = .5
+  ) + 
+  geom_line(
+    data = plot_data_vr$preds,
+    aes(
+      y = y_mean_plot,
+      x = assay_temp_diff,
+      color = warm_cold,
+      group = warm_cold
+    ), 
+    size = 1.5
+  ) + 
+  geom_text(
+    data = sample_sizes_vr, 
+    aes(
+      x = Inf, 
+      y = y,
+      label = paste0("k = ", estimates, " (", studies, ")"),
+      color = warm_cold
+    ), 
+    hjust = 1.05,
+    size = 5,
+    show.legend = FALSE
+  ) +
+  facet_wrap(~ trait_type, ncol = 1, scales = "free_y") +
+  scale_fill_manual(values = c("#06B4BA", "#E80756")) +
+  scale_color_manual(values = c("#06B4BA", "#E80756")) +
+  labs(
+    x = "Assay temperature difference",
+    y = "lnVR",
+    col = "Regime"
+  ) +
+  theme_bw() + 
+  scale_size_continuous(range = c(4, 10)) + 
+  theme(
+    text = element_text(size = 25, color = "black"),
+    legend.title = ggplot2::element_text(size = 18),
+    legend.text = ggplot2::element_text(size = 16),
+    axis.text.y = ggplot2::element_text(size = 20, colour = "black", hjust = 0.5),
+    axis.text.x = ggplot2::element_text(size = 20),
+    panel.border = element_rect(color = "black", size = 1.5),
+    strip.background = element_blank(),
+    strip.text = element_text(color = "black", size = 22)
+  ) +
+  guides(fill = "none", col = "none", size = "none")
+
+ggsave(file = "fig/figure_S5.png", width = 12, height = 10, dpi = 500)
+```
+
+
+## **Figure S6** 
+
+```{r, fig.height = 10, fig.width = 12}
+# Load models
+lnCVR_model_all_moderators <- readRDS("RData/lnCVR_model_all_moderators.rds")
+
+# Generate predictions
+emmeans_full_model <- as.data.frame(emmeans(
+  lnCVR_model_all_moderators,
+  specs = ~ assay_temp_diff * select_temp_diff * gen_selection * gen_common_garden | trait_type * warm_cold,
+   at = list(assay_temp_diff = seq(min(data$assay_temp_diff), max(data$assay_temp_diff), by = 0.5)))) 
+
+# Calculate range of values for each category
+range_df <- data %>%
+  group_by(trait_type, warm_cold) %>%
+  summarize(
+    min_assay_temp_diff = min(assay_temp_diff, na.rm = TRUE),
+    max_assay_temp_diff = max(assay_temp_diff, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+# Match emmeans coding to whatever is already in data
+emmeans_full_model$trait_type <- factor(
+  emmeans_full_model$trait_type,
+  levels = c("body_size", "fecundity", "survival"),
+  labels = c("Body size", "Fecundity", "Survival")
+)
+
+emmeans_full_model$warm_cold <- factor(
+  emmeans_full_model$warm_cold,
+  levels = c("cold", "warm"),
+  labels = c("Cold", "Warm")
+)
+
+# Tailor predictions to the range of the data
+emmeans_full_model<- emmeans_full_model %>%
+  left_join(range_df, by = c("trait_type", "warm_cold")) %>%
+  filter(
+    assay_temp_diff >= min_assay_temp_diff,
+    assay_temp_diff <= max_assay_temp_diff
+  )
+
+# Plot objects using helper functions
+facet_limits_cvr <- make_facet_limits(
+  data_points = data,
+  data_preds = emmeans_full_model,
+  y_point = "lnCVR",
+  y_lower = "lower.HPD",
+  y_upper = "upper.HPD",
+  buffer = 0.05,
+  cap = 3.5
+)
+
+plot_data_cvr <- clip_plot_data(
+  data_points = data,
+  data_preds = emmeans_full_model,
+  facet_limits = facet_limits_cvr,
+  y_point = "lnRR",
+  y_mean = "emmean",
+  y_lower = "lower.HPD",
+  y_upper = "upper.HPD"
+)
+
+sample_sizes_cvr <- make_sample_size_positions(
+  sample_sizes_df = sample_sizes,
+  facet_limits = facet_limits_cvr
+)
+
+ggplot() + 
+  geom_blank(data = facet_limits_cvr, aes(x = 0, y = ymin)) +
+  geom_blank(data = facet_limits_cvr, aes(x = 0, y = ymax)) +
+  geom_hline(yintercept = 0, linetype = 2, colour = "black", alpha = 0.75) +  
+  geom_vline(xintercept = 0, linetype = 2, colour = "black", alpha = 0.75) +  
+  geom_point(
+    data = plot_data_cvr$points,
+    aes(
+      x = assay_temp_diff, 
+      y = lnRR, 
+      size = 1 / sqrt(var_lnRR), 
+      fill = warm_cold
+    ), 
+    shape = 21, 
+    alpha = 0.7, 
+    stroke = 1,
+    position = position_jitter(width = 0.05)
+  ) + 
+  geom_ribbon(
+    data = plot_data_cvr$preds,
+    aes(
+      x = assay_temp_diff,
+      ymin = y_lower_plot, 
+      ymax = y_upper_plot, 
+      fill = warm_cold,
+      group = warm_cold
+    ), 
+    alpha = .5
+  ) + 
+  geom_line(
+    data = plot_data_cvr$preds,
+    aes(
+      y = y_mean_plot,
+      x = assay_temp_diff,
+      color = warm_cold,
+      group = warm_cold
+    ), 
+    size = 1.5
+  ) + 
+  geom_text(
+    data = sample_sizes_cvr, 
+    aes(
+      x = Inf, 
+      y = y,
+      label = paste0("k = ", estimates, " (", studies, ")"),
+      color = warm_cold
+    ), 
+    hjust = 1.05,
+    size = 5,
+    show.legend = FALSE
+  ) +
+  facet_wrap(~ trait_type, ncol = 1, scales = "free_y") +
+  scale_fill_manual(values = c("#06B4BA", "#E80756")) +
+  scale_color_manual(values = c("#06B4BA", "#E80756")) +
+  labs(
+    x = "Assay temperature difference",
+    y = "lnCVR",
+    col = "Regime"
+  ) +
+  theme_bw() + 
+  scale_size_continuous(range = c(4, 10)) + 
+  theme(
+    text = element_text(size = 25, color = "black"),
+    legend.title = ggplot2::element_text(size = 18),
+    legend.text = ggplot2::element_text(size = 16),
+    axis.text.y = ggplot2::element_text(size = 20, colour = "black", hjust = 0.5),
+    axis.text.x = ggplot2::element_text(size = 20),
+    panel.border = element_rect(color = "black", size = 1.5),
+    strip.background = element_blank(),
+    strip.text = element_text(color = "black", size = 22)
+  ) +
+  guides(fill = "none", col = "none", size = "none")
+
+ggsave(file = "fig/figure_S6.png", width = 12, height = 10, dpi = 500)
+```
+
+
+
+## **Figure S7** 
+
+```{r, fig.width = 12, fig.height=10}
+# Load model
+lnCVR_model_assay_temp_diff <- readRDS("RData/lnCVR_model_assay_temp_diff.rds")
+
+# Generate predictions
+emmeans_assay_temp_diff <- as.data.frame(emmeans(
+  lnCVR_model_assay_temp_diff,
+  specs = ~ assay_temp_diff | trait_type * warm_cold,
+  at = list(assay_temp_diff = seq(min(data$assay_temp_diff), max(data$assay_temp_diff), by = 0.5)))
+  )
+
+# Calculate range of values for each category
+range_df <- data %>%
+  group_by(trait_type, warm_cold) %>%
+  summarize(
+    min_assay_temp_diff = min(assay_temp_diff),
+    max_assay_temp_diff = max(assay_temp_diff)
+  )
+
+emmeans_assay_temp_diff$trait_type <- factor(emmeans_assay_temp_diff$trait_type, 
+                          levels = c("body_size", "fecundity", "survival"), 
+                          labels = c("Body size", "Fecundity", "Survival"))
+
+emmeans_assay_temp_diff$warm_cold <- factor(emmeans_assay_temp_diff$warm_cold, 
+                          levels = c("cold", "warm"), 
+                          labels = c("Cold", "Warm"))
+
+# Tailor predictions to the range of the data
+emmeans_assay_temp_diff <- emmeans_assay_temp_diff %>%
+  left_join(range_df, by = c("trait_type", "warm_cold")) %>%
+  filter(
+    assay_temp_diff >= min_assay_temp_diff,
+    assay_temp_diff <= max_assay_temp_diff
+  )
+
+# Plot
+facet_limits_cvr <- make_facet_limits(
+  data_points = data,
+  data_preds = emmeans_assay_temp_diff,
+  y_point = "lnCVR",
+  y_lower = "lower.HPD",
+  y_upper = "upper.HPD",
+  buffer = 0.05,
+  cap = 3.5
+)
+
+plot_data_cvr <- clip_plot_data(
+  data_points = data,
+  data_preds = emmeans_assay_temp_diff,
+  facet_limits = facet_limits_cvr,
+  y_point = "lnCVR",
+  y_mean = "emmean",
+  y_lower = "lower.HPD",
+  y_upper = "upper.HPD"
+)
+
+sample_sizes_cvr <- make_sample_size_positions(
+  sample_sizes_df = sample_sizes,
+  facet_limits = facet_limits_cvr
+)
+
+ggplot() + 
+  geom_blank(data = facet_limits_cvr, aes(x = 0, y = ymin)) +
+  geom_blank(data = facet_limits_cvr, aes(x = 0, y = ymax)) +
+  geom_hline(yintercept = 0, linetype = 2, colour = "black", alpha = 0.75) +  
+  geom_vline(xintercept = 0, linetype = 2, colour = "black", alpha = 0.75) + 
+  geom_point(
+    data = plot_data_cvr$points,
+    aes(
+      x = assay_temp_diff, 
+      y = lnCVR, 
+      size = 1 / sqrt(var_lnCVR), 
+      fill = warm_cold
+    ), 
+    shape = 21, 
+    alpha = 0.7, 
+    stroke = 1,
+    position = position_jitter(width = 0.05)
+  ) + 
+  geom_ribbon(
+    data = plot_data_cvr$preds,
+    aes(
+      x = assay_temp_diff,
+      ymin = y_lower_plot, 
+      ymax = y_upper_plot, 
+      fill = warm_cold,
+      group = warm_cold
+    ), 
+    alpha = .5
+  ) + 
+  geom_line(
+    data = plot_data_cvr$preds,
+    aes(
+      y = y_mean_plot,
+      x = assay_temp_diff,
+      color = warm_cold,
+      group = warm_cold
+    ), 
+    size = 1.5
+  ) + 
+  geom_text(
+    data = sample_sizes_cvr, 
+    aes(
+      x = Inf, 
+      y = y,
+      label = paste0("k = ", estimates, " (", studies, ")"),
+      color = warm_cold
+    ), 
+    hjust = 1.05,
+    size = 5,
+    show.legend = FALSE
+  ) +
+  facet_wrap(~ trait_type, ncol = 1, scales = "free_y") +
+  scale_fill_manual(values = c("#06B4BA", "#E80756")) +
+  scale_color_manual(values = c("#06B4BA", "#E80756")) +
+  labs(
+    x = "Assay temperature difference",
+    y = "lnCVR",
+    col = "Regime"
+  ) +
+  theme_bw() + 
+  scale_size_continuous(range = c(2, 8)) + 
+  theme(
+    text = element_text(size = 25, color = "black"),
+    legend.title = ggplot2::element_text(size = 18),
+    legend.text = ggplot2::element_text(size = 16),
+    axis.text.y = ggplot2::element_text(size = 20, colour = "black", hjust = 0.5),
+    axis.text.x = ggplot2::element_text(size = 20),
+    panel.border = element_rect(color = "black", size = 1.5),
+    strip.background = element_blank(),
+    strip.text = element_text(color = "black", size = 22)
+  ) +
+  guides(fill = "none", col = "none", size = "none")
+
+ggsave(file = "fig/figure_S7.png", width = 10, height = 10, dpi = 500)
+```
+
+
+## **Figure S8**
+```{r, fig.width = 20, fig.height = 26}
+# Load models
+lnCVR_model_sel_temp_diff <- readRDS("RData/lnCVR_model_sel_temp_diff.rds")
+lnCVR_model_gen_selection <- readRDS("RData/lnCVR_model_gen_selection.rds")
+lnCVR_model_gen_common_garden <- readRDS("RData/lnCVR_model_gen_common_garden.rds")
+lnCVR_model_pop_size <- readRDS("RData/lnCVR_model_pop_size.rds")
+
+# For figures
+trait_levels_raw <- c("body_size", "fecundity", "survival")
+trait_levels_lab <- c("Body size", "Fecundity", "Survival")
+
+warm_levels_raw <- c("cold", "warm")
+warm_levels_lab <- c("Cold", "Warm")
+
+##################### Selection temperature ################################
+
+data_plot <- data
+sample_sizes_plot <- sample_sizes
+
+# Generate predictions
+emmeans_sel_temp_diff <- as.data.frame(
+  emmeans(
+    lnCVR_model_sel_temp_diff,
+    specs = ~ select_temp_diff | trait_type * warm_cold,
+    at = list(
+      select_temp_diff = seq(
+        min(data$select_temp_diff, na.rm = TRUE),
+        max(data$select_temp_diff, na.rm = TRUE),
+        by = 0.1
+      ),
+      assay_temp_diff = 0
+    )
+  )
+)
+
+# Standardise labels in predictions
+emmeans_sel_temp_diff <- emmeans_sel_temp_diff %>%
+  dplyr::mutate(
+    trait_type = factor(trait_type,
+      levels = trait_levels_raw,
+      labels = trait_levels_lab
+    ),
+    warm_cold = factor(warm_cold,
+      levels = warm_levels_raw,
+      labels = warm_levels_lab
+    )
+  )
+
+# Calculate range of observed x values by facet/group
+range_df_sel_temp_diff <- data_plot %>%
+  dplyr::filter(!is.na(select_temp_diff)) %>%
+  dplyr::group_by(trait_type, warm_cold) %>%
+  dplyr::summarise(
+    min_select_temp_diff = min(select_temp_diff, na.rm = TRUE),
+    max_select_temp_diff = max(select_temp_diff, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+# Tailor predictions to observed x range
+emmeans_sel_temp_diff <- emmeans_sel_temp_diff %>%
+  dplyr::left_join(range_df_sel_temp_diff, by = c("trait_type", "warm_cold")) %>%
+  dplyr::filter(
+    select_temp_diff >= min_select_temp_diff,
+    select_temp_diff <= max_select_temp_diff
+  )
+
+# Facet-specific y limits
+facet_limits_sel_temp_diff <- make_facet_limits(
+  data_points = data_plot %>% dplyr::filter(!is.na(select_temp_diff)),
+  data_preds = emmeans_sel_temp_diff,
+  y_point = "lnCVR",
+  y_lower = "lower.HPD",
+  y_upper = "upper.HPD",
+  buffer = 0.05,
+  cap = 3.5
+)
+
+# Clip data to those limits
+plot_data_sel_temp_diff <- clip_plot_data(
+  data_points = data_plot %>% dplyr::filter(!is.na(select_temp_diff)),
+  data_preds = emmeans_sel_temp_diff,
+  facet_limits = facet_limits_sel_temp_diff,
+  y_point = "lnCVR",
+  y_mean = "emmean",
+  y_lower = "lower.HPD",
+  y_upper = "upper.HPD"
+)
+
+# Sample size label positions
+sample_sizes_sel_temp_diff <- make_sample_size_positions(
+  sample_sizes_df = sample_sizes_plot,
+  facet_limits = facet_limits_sel_temp_diff
+)
+
+sel_temp_diff <- ggplot() +
+  geom_blank(data = facet_limits_sel_temp_diff, aes(x = 0, y = ymin)) +
+  geom_blank(data = facet_limits_sel_temp_diff, aes(x = 0, y = ymax)) +
+  geom_hline(yintercept = 0, linetype = 2, colour = "black", alpha = 0.75) +
+  geom_point(
+    data = plot_data_sel_temp_diff$points,
+    aes(
+      x = select_temp_diff,
+      y = lnCVR,
+      size = 1 / sqrt(var_lnCVR),
+      fill = warm_cold
+    ),
+    shape = 21,
+    alpha = 0.7,
+    stroke = 1,
+    position = position_jitter(width = 0.05)
+  ) +
+  geom_ribbon(
+    data = plot_data_sel_temp_diff$preds,
+    aes(
+      x = select_temp_diff,
+      ymin = y_lower_plot,
+      ymax = y_upper_plot,
+      fill = warm_cold,
+      group = warm_cold
+    ),
+    alpha = 0.5
+  ) +
+  geom_line(
+    data = plot_data_sel_temp_diff$preds,
+    aes(
+      x = select_temp_diff,
+      y = y_mean_plot,
+      colour = warm_cold,
+      group = warm_cold
+    ),
+    size = 1.5
+  ) +
+  geom_text(
+    data = sample_sizes_sel_temp_diff,
+    aes(
+      x = Inf,
+      y = y,
+      label = paste0("k = ", estimates, " (", studies, ")"),
+      colour = warm_cold
+    ),
+    hjust = 1.05,
+    size = 7,
+    show.legend = FALSE
+  ) +
+  facet_wrap(~ trait_type, ncol = 1, scales = "free_y") +
+  scale_fill_manual(values = c("#06B4BA", "#E80756")) +
+  scale_color_manual(values = c("#06B4BA", "#E80756")) +
+  labs(x = "Selection temperature difference", y = "lnCVR", col = "Regime") +
+  theme_bw() +
+  scale_size_continuous(range = c(2, 8)) +
+  theme(
+    text = element_text(size = 30, color = "black"),
+    legend.title = ggplot2::element_text(size = 18),
+    legend.text = ggplot2::element_text(size = 16),
+    axis.text.y = ggplot2::element_text(size = 20, colour = "black", hjust = 0.5),
+    axis.text.x = ggplot2::element_text(size = 20),
+    panel.border = element_rect(color = "black", size = 1.5),
+    strip.background = element_blank(),
+    strip.text = element_text(color = "black", size = 28),
+    plot.margin = unit(c(1, 0, 0, 0), "cm")
+  ) +
+  guides(fill = "none", size = "none", color = "none")
+
+############### Number of generations of selection ################
+
+emmeans_gen_selection <- as.data.frame(
+  emmeans(
+    lnCVR_model_gen_selection,
+    specs = ~ gen_selection | trait_type * warm_cold,
+    at = list(
+      gen_selection = seq(
+        min(data$gen_selection, na.rm = TRUE),
+        max(data$gen_selection, na.rm = TRUE),
+        by = 1
+      ),
+      assay_temp_diff = 0
+    )
+  )
+)
+
+emmeans_gen_selection <- emmeans_gen_selection %>%
+  dplyr::mutate(
+    trait_type = factor(trait_type,
+      levels = trait_levels_raw,
+      labels = trait_levels_lab
+    ),
+    warm_cold = factor(warm_cold,
+      levels = warm_levels_raw,
+      labels = warm_levels_lab
+    )
+  )
+
+range_df_gen_selection <- data_plot %>%
+  dplyr::filter(!is.na(gen_selection)) %>%
+  dplyr::group_by(trait_type, warm_cold) %>%
+  dplyr::summarise(
+    min_gen_selection = min(gen_selection, na.rm = TRUE),
+    max_gen_selection = max(gen_selection, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+emmeans_gen_selection <- emmeans_gen_selection %>%
+  dplyr::left_join(range_df_gen_selection, by = c("trait_type", "warm_cold")) %>%
+  dplyr::filter(
+    gen_selection >= min_gen_selection,
+    gen_selection <= max_gen_selection
+  )
+
+facet_limits_gen_selection <- make_facet_limits(
+  data_points = data_plot %>% dplyr::filter(!is.na(gen_selection)),
+  data_preds = emmeans_gen_selection,
+  y_point = "lnCVR",
+  y_lower = "lower.HPD",
+  y_upper = "upper.HPD",
+  buffer = 0.05,
+  cap = 3.5
+)
+
+plot_data_gen_selection <- clip_plot_data(
+  data_points = data_plot %>% dplyr::filter(!is.na(gen_selection)),
+  data_preds = emmeans_gen_selection,
+  facet_limits = facet_limits_gen_selection,
+  y_point = "lnCVR",
+  y_mean = "emmean",
+  y_lower = "lower.HPD",
+  y_upper = "upper.HPD"
+)
+
+sample_sizes_gen_selection <- make_sample_size_positions(
+  sample_sizes_df = sample_sizes_plot,
+  facet_limits = facet_limits_gen_selection
+)
+
+gen_selection <- ggplot() +
+  geom_blank(data = facet_limits_gen_selection, aes(x = 0, y = ymin)) +
+  geom_blank(data = facet_limits_gen_selection, aes(x = 0, y = ymax)) +
+  geom_hline(yintercept = 0, linetype = 2, colour = "black", alpha = 0.75) +
+  geom_point(
+    data = plot_data_gen_selection$points,
+    aes(
+      x = gen_selection,
+      y = lnCVR,
+      size = 1 / sqrt(var_lnCVR),
+      fill = warm_cold
+    ),
+    shape = 21,
+    alpha = 0.7,
+    stroke = 1,
+    position = position_jitter(width = 0.05)
+  ) +
+  geom_ribbon(
+    data = plot_data_gen_selection$preds,
+    aes(
+      x = gen_selection,
+      ymin = y_lower_plot,
+      ymax = y_upper_plot,
+      fill = warm_cold,
+      group = warm_cold
+    ),
+    alpha = 0.5
+  ) +
+  geom_line(
+    data = plot_data_gen_selection$preds,
+    aes(
+      x = gen_selection,
+      y = y_mean_plot,
+      colour = warm_cold,
+      group = warm_cold
+    ),
+    size = 1.5
+  ) +
+  geom_text(
+    data = sample_sizes_gen_selection,
+    aes(
+      x = Inf,
+      y = y,
+      label = paste0("k = ", estimates, " (", studies, ")"),
+      colour = warm_cold
+    ),
+    hjust = 1.05,
+    size = 7,
+    show.legend = FALSE
+  ) +
+  facet_wrap(~ trait_type, ncol = 1, scales = "free_y") +
+  scale_fill_manual(values = c("#06B4BA", "#E80756")) +
+  scale_color_manual(values = c("#06B4BA", "#E80756")) +
+  labs(x = "Number of generations of selection", y = "lnCVR", col = "Regime") +
+  theme_bw() +
+  scale_size_continuous(range = c(2, 8)) +
+  theme(
+    text = element_text(size = 30, color = "black"),
+    legend.title = ggplot2::element_text(size = 18),
+    legend.text = ggplot2::element_text(size = 16),
+    axis.text.y = ggplot2::element_text(size = 20, colour = "black", hjust = 0.5),
+    axis.text.x = ggplot2::element_text(size = 20),
+    panel.border = element_rect(color = "black", size = 1.5),
+    strip.background = element_blank(),
+    strip.text = element_text(color = "black", size = 28),
+    plot.margin = unit(c(1.5, 0, 0, 0), "cm")
+  ) +
+  guides(fill = "none", size = "none", color = "none") +
+  coord_cartesian(xlim = c(0, 150))
+
+
+############# Number of generations of common garden ####################
+
+emmeans_gen_common_garden <- as.data.frame(
+  emmeans(
+    lnCVR_model_gen_common_garden,
+    specs = ~ gen_common_garden | trait_type * warm_cold,
+    at = list(
+      gen_common_garden = seq(
+        min(data$gen_common_garden, na.rm = TRUE),
+        max(data$gen_common_garden, na.rm = TRUE),
+        by = 1
+      ),
+      assay_temp_diff = 0
+    )
+  )
+)
+
+emmeans_gen_common_garden <- emmeans_gen_common_garden %>%
+  dplyr::mutate(
+    trait_type = factor(trait_type,
+      levels = trait_levels_raw,
+      labels = trait_levels_lab
+    ),
+    warm_cold = factor(warm_cold,
+      levels = warm_levels_raw,
+      labels = warm_levels_lab
+    )
+  )
+
+range_df_gen_common_garden <- data_plot %>%
+  dplyr::filter(!is.na(gen_common_garden)) %>%
+  dplyr::group_by(trait_type, warm_cold) %>%
+  dplyr::summarise(
+    min_gen_common_garden = min(gen_common_garden, na.rm = TRUE),
+    max_gen_common_garden = max(gen_common_garden, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+emmeans_gen_common_garden <- emmeans_gen_common_garden %>%
+  dplyr::left_join(range_df_gen_common_garden, by = c("trait_type", "warm_cold")) %>%
+  dplyr::filter(
+    gen_common_garden >= min_gen_common_garden,
+    gen_common_garden <= max_gen_common_garden
+  )
+
+facet_limits_gen_common_garden <- make_facet_limits(
+  data_points = data_plot %>% dplyr::filter(!is.na(gen_common_garden)),
+  data_preds = emmeans_gen_common_garden,
+  y_point = "lnCVR",
+  y_lower = "lower.HPD",
+  y_upper = "upper.HPD",
+  buffer = 0.05,
+  cap = 3.5
+)
+
+plot_data_gen_common_garden <- clip_plot_data(
+  data_points = data_plot %>% dplyr::filter(!is.na(gen_common_garden)),
+  data_preds = emmeans_gen_common_garden,
+  facet_limits = facet_limits_gen_common_garden,
+  y_point = "lnCVR",
+  y_mean = "emmean",
+  y_lower = "lower.HPD",
+  y_upper = "upper.HPD"
+)
+
+sample_sizes_gen_common_garden <- make_sample_size_positions(
+  sample_sizes_df = sample_sizes_plot,
+  facet_limits = facet_limits_gen_common_garden
+)
+
+gen_common_garden <- ggplot() +
+  geom_blank(data = facet_limits_gen_common_garden, aes(x = 0, y = ymin)) +
+  geom_blank(data = facet_limits_gen_common_garden, aes(x = 0, y = ymax)) +
+  geom_hline(yintercept = 0, linetype = 2, colour = "black", alpha = 0.75) +
+  geom_point(
+    data = plot_data_gen_common_garden$points,
+    aes(
+      x = gen_common_garden,
+      y = lnCVR,
+      size = 1 / sqrt(var_lnCVR),
+      fill = warm_cold
+    ),
+    shape = 21,
+    alpha = 0.7,
+    stroke = 1,
+    position = position_jitter(width = 0.05)
+  ) +
+  geom_ribbon(
+    data = plot_data_gen_common_garden$preds,
+    aes(
+      x = gen_common_garden,
+      ymin = y_lower_plot,
+      ymax = y_upper_plot,
+      fill = warm_cold,
+      group = warm_cold
+    ),
+    alpha = 0.5
+  ) +
+  geom_line(
+    data = plot_data_gen_common_garden$preds,
+    aes(
+      x = gen_common_garden,
+      y = y_mean_plot,
+      colour = warm_cold,
+      group = warm_cold
+    ),
+    size = 1.5
+  ) +
+  geom_text(
+    data = sample_sizes_gen_common_garden,
+    aes(
+      x = Inf,
+      y = y,
+      label = paste0("k = ", estimates, " (", studies, ")"),
+      colour = warm_cold
+    ),
+    hjust = 1.05,
+    size = 7,
+    show.legend = FALSE
+  ) +
+  facet_wrap(~ trait_type, ncol = 1, scales = "free_y") +
+  scale_fill_manual(values = c("#06B4BA", "#E80756")) +
+  scale_color_manual(values = c("#06B4BA", "#E80756")) +
+  labs(x = "Number of generations of common garden", y = "", col = "Regime") +
+  theme_bw() +
+  scale_size_continuous(range = c(2, 8)) +
+  theme(
+    text = element_text(size = 30, color = "black"),
+    legend.title = ggplot2::element_text(size = 18),
+    legend.text = ggplot2::element_text(size = 16),
+    axis.text.y = ggplot2::element_text(size = 20, colour = "black", hjust = 0.5),
+    axis.text.x = ggplot2::element_text(size = 20),
+    panel.border = element_rect(color = "black", size = 1.5),
+    strip.background = element_blank(),
+    strip.text = element_text(color = "black", size = 28),
+    plot.margin = unit(c(1.5, 1, 0, 0.5), "cm")
+  ) +
+  guides(fill = "none", size = "none", color = "none") +
+  coord_cartesian(xlim = c(0, 11.5))
+
+
+############# Population size ####################
+
+emmeans_pop_size <- as.data.frame(
+  emmeans(
+    lnCVR_model_pop_size,
+    specs = ~ pop_size | trait_type * warm_cold,
+    at = list(
+      pop_size = seq(
+        min(data$pop_size, na.rm = TRUE),
+        max(data$pop_size, na.rm = TRUE),
+        by = 50
+      ),
+      assay_temp_diff = 0
+    )
+  )
+)
+
+emmeans_pop_size <- emmeans_pop_size %>%
+  dplyr::mutate(
+    trait_type = factor(trait_type,
+      levels = trait_levels_raw,
+      labels = trait_levels_lab
+    ),
+    warm_cold = factor(warm_cold,
+      levels = warm_levels_raw,
+      labels = warm_levels_lab
+    )
+  )
+
+range_df_pop_size <- data_plot %>%
+  dplyr::filter(!is.na(pop_size)) %>%
+  dplyr::group_by(trait_type, warm_cold) %>%
+  dplyr::summarise(
+    min_pop_size = min(pop_size, na.rm = TRUE),
+    max_pop_size = max(pop_size, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+emmeans_pop_size <- emmeans_pop_size %>%
+  dplyr::left_join(range_df_pop_size, by = c("trait_type", "warm_cold")) %>%
+  dplyr::filter(
+    pop_size >= min_pop_size,
+    pop_size <= max_pop_size
+  )
+
+sample_sizes_pop_size <- data_plot %>%
+  dplyr::filter(!is.na(pop_size)) %>%
+  dplyr::group_by(trait_type, warm_cold) %>%
+  dplyr::summarise(
+    estimates = dplyr::n(),
+    studies = dplyr::n_distinct(ref),
+    .groups = "drop"
+  )
+
+facet_limits_pop_size <- make_facet_limits(
+  data_points = data_plot %>% dplyr::filter(!is.na(pop_size)),
+  data_preds = emmeans_pop_size,
+  y_point = "lnCVR",
+  y_lower = "lower.HPD",
+  y_upper = "upper.HPD",
+  buffer = 0.05,
+  cap = 3.5
+)
+
+plot_data_pop_size <- clip_plot_data(
+  data_points = data_plot %>% dplyr::filter(!is.na(pop_size)),
+  data_preds = emmeans_pop_size,
+  facet_limits = facet_limits_pop_size,
+  y_point = "lnCVR",
+  y_mean = "emmean",
+  y_lower = "lower.HPD",
+  y_upper = "upper.HPD"
+)
+
+sample_sizes_pop_size_pos <- make_sample_size_positions(
+  sample_sizes_df = sample_sizes_pop_size,
+  facet_limits = facet_limits_pop_size
+)
+
+pop_size <- ggplot() +
+  geom_blank(data = facet_limits_pop_size, aes(x = 0, y = ymin)) +
+  geom_blank(data = facet_limits_pop_size, aes(x = 0, y = ymax)) +
+  geom_hline(yintercept = 0, linetype = 2, colour = "black", alpha = 0.75) +
+  geom_point(
+    data = plot_data_pop_size$points,
+    aes(
+      x = pop_size,
+      y = lnCVR,
+      size = 1 / sqrt(var_lnCVR),
+      fill = warm_cold
+    ),
+    shape = 21,
+    alpha = 0.7,
+    stroke = 1,
+    position = position_jitter(width = 0.05)
+  ) +
+  geom_ribbon(
+    data = plot_data_pop_size$preds,
+    aes(
+      x = pop_size,
+      ymin = y_lower_plot,
+      ymax = y_upper_plot,
+      fill = warm_cold,
+      group = warm_cold
+    ),
+    alpha = 0.5
+  ) +
+  geom_line(
+    data = plot_data_pop_size$preds,
+    aes(
+      x = pop_size,
+      y = y_mean_plot,
+      colour = warm_cold,
+      group = warm_cold
+    ),
+    size = 1.5
+  ) +
+  geom_text(
+    data = sample_sizes_pop_size_pos,
+    aes(
+      x = Inf,
+      y = y,
+      label = paste0("k = ", estimates, " (", studies, ")"),
+      colour = warm_cold
+    ),
+    hjust = 1.05,
+    size = 7,
+    show.legend = FALSE
+  ) +
+  facet_wrap(~ trait_type, ncol = 1, scales = "free_y") +
+  scale_fill_manual(values = c("#06B4BA", "#E80756")) +
+  scale_color_manual(values = c("#06B4BA", "#E80756")) +
+  labs(x = "Population size", y = "", col = "Regime") +
+  theme_bw() +
+  scale_size_continuous(range = c(2, 8)) +
+  theme(
+    text = element_text(size = 30, color = "black"),
+    legend.title = ggplot2::element_text(size = 18),
+    legend.text = ggplot2::element_text(size = 16),
+    axis.text.y = ggplot2::element_text(size = 20, colour = "black", hjust = 0.5),
+    axis.text.x = ggplot2::element_text(size = 20),
+    panel.border = element_rect(color = "black", size = 1.5),
+    strip.background = element_blank(),
+    strip.text = element_text(color = "black", size = 28),
+    plot.margin = unit(c(0, 1, 0, 0.5), "cm")
+  ) +
+  guides(fill = "none", size = "none", color = "none")
+
+(sel_temp_diff | pop_size) / (gen_selection | gen_common_garden)
+
+ggsave(file = "fig/figure_S8.png", width = 20, height = 26, dpi = 400)
+```
+
+
+
+## **Figure S9**
+
+```{r, fig.width = 12, fig.height=10}
+# Load model
+lnRR_model_pub_bias_var <- readRDS("RData/lnRR_model_pub_bias_var.rds")
+
+# Generate predictions
+emmeans_pub_bias_var <- as.data.frame(emmeans(
+  lnRR_model_pub_bias_var,
+  specs = ~ var_lnRR | trait_type * warm_cold,
+  at = list(var_lnRR = seq(0, max(data$var_lnRR), by = 0.1),
+            assay_temp_diff = 0))
+  ) # Conditional effects on assay_temp_diff = 0
+
+emmeans_pub_bias_var$trait_type <- factor(emmeans_pub_bias_var$trait_type, 
+                          levels = c("body_size", "fecundity", "survival"), 
+                          labels = c("Body size", "Fecundity", "Survival"))
+
+emmeans_pub_bias_var$warm_cold <- factor(emmeans_pub_bias_var$warm_cold, 
+                          levels = c("cold", "warm"), 
+                          labels = c("Cold", "Warm"))
+
+# Plot
 ggplot() + 
     geom_hline(yintercept = 0, # Horizontal line
                linetype = 2, 
                colour = "black", 
-               alpha = 0.75) +  
-    geom_vline(xintercept = 0, # Vertical line
-               linetype = 2, 
-               colour = "black", 
                alpha = 0.75) + 
-    geom_point(data = data, # Effect sizes, scaled by precision
-                  aes(x = assay_temp_diff, 
-                      y = lnVR, 
-                      size = 1/sqrt(var_lnVR), 
+    geom_point(data = data,  # Effect sizes, scaled by precision
+                  aes(x = var_lnRR, 
+                      y = lnRR, 
+                      size = 1/sqrt(var_lnRR), 
                       fill = warm_cold), 
                   shape = 21, 
                   alpha = 0.7, 
                   stroke = 1,
-                  position = position_jitter(width = 0.05)) + 
-     geom_ribbon(data = emmeans_assay_temp_diff, # Shaded area for credible intervals
-                 aes(x = assay_temp_diff,
+                  position = position_jitter(width = 0.001)) + 
+     geom_ribbon(data = emmeans_pub_bias_var, # Shaded area for credible intervals
+                 aes(x = var_lnRR,
                      ymin = lower.HPD, 
                      ymax = upper.HPD, 
                      fill = warm_cold,
                      group = warm_cold), 
                  alpha = .5) + 
-     geom_line(data = emmeans_assay_temp_diff,  # Predicted regression line
+     geom_line(data = emmeans_pub_bias_var, # Predicted regression line
                aes(y = emmean,
-                   x = assay_temp_diff,
+                   x = var_lnRR,
                    color = warm_cold,
                    group = warm_cold), 
-               size = 1.5) + 
-    geom_text(data = sample_sizes, 
+               size = 1.5) +  
+     geom_text(data = sample_sizes, 
               aes(x = Inf, 
-                  y = ifelse(warm_cold == "Warm", -2, -2.75),  # Sample sizes
+                  y = ifelse(warm_cold == "Warm", -0.8, -1.3),  # Sample sizes
                   label = paste0("k = ", estimates, " (", studies, ")"),
                   color = warm_cold), 
               hjust = 1.05, size = 5, show.legend = FALSE) +
-  
-  facet_wrap(~ trait_type, ncol = 1) + # Different panels for each trait
+  facet_wrap(~ trait_type, ncol = 1) +  # Different panels for each trait
   scale_fill_manual(values = c("#06B4BA", "#E80756"))+
   scale_color_manual(values = c("#06B4BA", "#E80756"))+
-  labs(x = "Assay temperature difference", y = "lnVR",
-       col = "Regime") +
+  labs(x = "Sampling variance of lnRR", y = "lnRR", col = "Regime") +
   theme_bw() + 
   scale_size_continuous(range = c(2, 8))+ 
   theme(text = element_text(size = 25, color = "black"),
@@ -8438,64 +10743,42 @@ ggplot() +
         strip.background = element_blank(),
         strip.text = element_text(color = "black", size = 22)) +
     guides(fill = "none", size = "none")+
-    coord_cartesian(ylim = c(-3.5, 3.5))
+    coord_cartesian(ylim = c(-1.5, 1.5), xlim = c(0, 0.3))
 
-ggsave(file = "fig/figure_5.png", width = 12, height = 10, dpi = 500)
+ggsave(file = "fig/figure_S9.png", width = 10, height = 10, dpi = 500)
 ```
 
-## **Figure 6**
 
-```{r, fig.width = 20, fig.height = 32}
-# Load models
-lnVR_model_sel_temp_diff <- readRDS("RData/lnVR_model_sel_temp_diff.rds")
-lnVR_model_gen_selection <- readRDS("RData/lnVR_model_gen_selection.rds")
-lnVR_model_gen_common_garden <- readRDS("RData/lnVR_model_gen_common_garden.rds")
-lnVR_model_pop_size <- readRDS("RData/lnVR_model_pop_size.rds")
-lnVR_model_all_moderators <- readRDS("RData/lnVR_model_all_moderators.rds")
+## **Figure S10**
 
-##################### Selection temperature ################################
+```{r, fig.width = 12, fig.height=10}
+# Load model
+lnVR_model_pub_bias_var <- readRDS("RData/lnVR_model_pub_bias_var.rds")
 
 # Generate predictions
-emmeans_sel_temp_diff <- as.data.frame(emmeans(
-  lnVR_model_sel_temp_diff,
-  specs = ~ select_temp_diff | trait_type * warm_cold,
-  at = list(select_temp_diff = seq(min(data$select_temp_diff), max(data$select_temp_diff), by = 0.1),
+emmeans_pub_bias_var <- as.data.frame(emmeans(
+  lnVR_model_pub_bias_var,
+  specs = ~ var_lnVR | trait_type * warm_cold,
+  at = list(var_lnVR = seq(0, 10, by = 0.5),
             assay_temp_diff = 0))
   ) # Conditional effects on assay_temp_diff = 0
 
-# Calculate range of values for each category
-range_df <- data %>%
-  group_by(trait_type, warm_cold) %>%
-  summarize(
-    min_select_temp_diff = min(select_temp_diff),
-    max_select_temp_diff = max(select_temp_diff)
-  )
-
-emmeans_sel_temp_diff$trait_type <- factor(emmeans_sel_temp_diff$trait_type, 
+emmeans_pub_bias_var$trait_type <- factor(emmeans_pub_bias_var$trait_type, 
                           levels = c("body_size", "fecundity", "survival"), 
                           labels = c("Body size", "Fecundity", "Survival"))
 
-emmeans_sel_temp_diff$warm_cold <- factor(emmeans_sel_temp_diff$warm_cold, 
+emmeans_pub_bias_var$warm_cold <- factor(emmeans_pub_bias_var$warm_cold, 
                           levels = c("cold", "warm"), 
                           labels = c("Cold", "Warm"))
 
-# Tailor predictions to the range of the data
-emmeans_sel_temp_diff <- emmeans_sel_temp_diff %>%
-  left_join(range_df, by = c("trait_type", "warm_cold")) %>%
-  filter(
-    select_temp_diff >= min_select_temp_diff,
-    select_temp_diff <= max_select_temp_diff
-  )
-
 # Plot
-sel_temp_diff <- 
 ggplot() + 
     geom_hline(yintercept = 0, # Horizontal line
                linetype = 2, 
                colour = "black", 
                alpha = 0.75) + 
     geom_point(data = data,  # Effect sizes, scaled by precision
-                  aes(x = select_temp_diff, 
+                  aes(x = var_lnVR, 
                       y = lnVR, 
                       size = 1/sqrt(var_lnVR), 
                       fill = warm_cold), 
@@ -8503,32 +10786,32 @@ ggplot() +
                   alpha = 0.7, 
                   stroke = 1,
                   position = position_jitter(width = 0.05)) + 
-     geom_ribbon(data = emmeans_sel_temp_diff, # Shaded area for credible intervals
-                 aes(x = select_temp_diff,
+     geom_ribbon(data = emmeans_pub_bias_var, # Shaded area for credible intervals
+                 aes(x = var_lnVR,
                      ymin = lower.HPD, 
                      ymax = upper.HPD, 
                      fill = warm_cold,
                      group = warm_cold), 
                  alpha = .5) + 
-     geom_line(data = emmeans_sel_temp_diff, # Predicted regression line
+     geom_line(data = emmeans_pub_bias_var, # Predicted regression line
                aes(y = emmean,
-                   x = select_temp_diff,
+                   x = var_lnVR,
                    color = warm_cold,
                    group = warm_cold), 
                size = 1.5) +  
      geom_text(data = sample_sizes, 
               aes(x = Inf, 
-                  y = ifelse(warm_cold == "Warm", -2, -2.75),  # Sample sizes
+                  y = ifelse(warm_cold == "Warm", -2.3, -3.25),  # Sample sizes
                   label = paste0("k = ", estimates, " (", studies, ")"),
                   color = warm_cold), 
               hjust = 1.05, size = 5, show.legend = FALSE) +
   facet_wrap(~ trait_type, ncol = 1) +  # Different panels for each trait
   scale_fill_manual(values = c("#06B4BA", "#E80756"))+
   scale_color_manual(values = c("#06B4BA", "#E80756"))+
-  labs(x = "Selection temperature difference", y = "lnVR", col = "Regime") +
+  labs(x = "Sampling variance of lnVR", y = "lnVR", col = "Regime") +
   theme_bw() + 
   scale_size_continuous(range = c(2, 8))+ 
- theme(text = element_text(size = 30, color = "black"),
+  theme(text = element_text(size = 25, color = "black"),
           legend.title = ggplot2::element_text(size = 18),
           legend.text = ggplot2::element_text(size = 16),
           axis.text.y = ggplot2::element_text(size = 20, 
@@ -8536,385 +10819,1079 @@ ggplot() +
           axis.text.x = ggplot2::element_text(size = 20),
         panel.border = element_rect(color = "black", size = 1.5),
         strip.background = element_blank(),
-        strip.text = element_text(color = "black", size = 28),
-        plot.margin = unit(c(1, 0, 0, 0), "cm")) +
-    guides(fill = "none", size = "none", color = "none")+
-    coord_cartesian(ylim = c(-3.5, 3.5))
+        strip.text = element_text(color = "black", size = 22)) +
+    guides(fill = "none", size = "none")+
+    coord_cartesian(ylim = c(-3.5, 3.5), xlim = c(0, 6))
 
-############## Generations of selection ##################################
+ggsave(file = "fig/figure_S10.png", width = 10, height = 10, dpi = 500)
+```
+
+## **Figure S11** 
+
+```{r, fig.width = 12, fig.height=10}
+# Load model
+lnRR_model_pub_year <- readRDS("RData/lnRR_model_pub_bias_year.rds")
 
 # Generate predictions
-emmeans_gen_selection <- as.data.frame(emmeans(
-  lnVR_model_gen_selection,
-  specs = ~ gen_selection | trait_type * warm_cold,
-  at = list(gen_selection = seq(min(data$gen_selection), max(data$gen_selection), by = 1),
-            assay_temp_diff = 0))
-  ) # Conditional effects on assay_temp_diff = 0
+emmeans_pub_year <- as.data.frame(emmeans(
+  lnRR_model_pub_year,
+  specs = ~ pub_year | trait_type * warm_cold,
+  at = list(pub_year = seq(min(data$pub_year), max(data$pub_year), by = 1)))
+  )
 
 # Calculate range of values for each category
 range_df <- data %>%
   group_by(trait_type, warm_cold) %>%
   summarize(
-    min_gen_selection = min(gen_selection),
-    max_gen_selection = max(gen_selection)
+    min_pub_year = min(pub_year),
+    max_pub_year = max(pub_year)
   )
 
-emmeans_gen_selection$trait_type <- factor(emmeans_gen_selection$trait_type, 
+emmeans_pub_year$trait_type <- factor(emmeans_pub_year$trait_type, 
                           levels = c("body_size", "fecundity", "survival"), 
                           labels = c("Body size", "Fecundity", "Survival"))
 
-emmeans_gen_selection$warm_cold <- factor(emmeans_gen_selection$warm_cold, 
+emmeans_pub_year$warm_cold <- factor(emmeans_pub_year$warm_cold, 
                           levels = c("cold", "warm"), 
                           labels = c("Cold", "Warm"))
 
 # Tailor predictions to the range of the data
-emmeans_gen_selection <- emmeans_gen_selection %>%
+emmeans_pub_year <- emmeans_pub_year %>%
   left_join(range_df, by = c("trait_type", "warm_cold")) %>%
   filter(
-    gen_selection >= min_gen_selection,
-    gen_selection <= max_gen_selection
+    pub_year >= min_pub_year,
+    pub_year <= max_pub_year
   )
 
 # Plot
-gen_selection <- 
-ggplot() + 
-    geom_hline(yintercept = 0, # Horizontal line
-               linetype = 2, 
-               colour = "black", 
-               alpha = 0.75) + 
-    geom_point(data = data,  # Effect sizes, scaled by precision
-                  aes(x = gen_selection, 
-                      y = lnVR, 
-                      size = 1/sqrt(var_lnVR), 
-                      fill = warm_cold), 
-                  shape = 21, 
-                  alpha = 0.7, 
-                  stroke = 1,
-                  position = position_jitter(width = 0.05)) + 
-     geom_ribbon(data = emmeans_gen_selection, # Shaded area for credible intervals
-                 aes(x = gen_selection,
-                     ymin = lower.HPD, 
-                     ymax = upper.HPD, 
-                     fill = warm_cold,
-                     group = warm_cold), 
-                 alpha = .5) + 
-     geom_line(data = emmeans_gen_selection, # Predicted regression line
-               aes(y = emmean,
-                   x = gen_selection,
-                   color = warm_cold,
-                   group = warm_cold), 
-               size = 1.5) +  
-     geom_text(data = sample_sizes, 
-              aes(x = Inf, 
-                  y = ifelse(warm_cold == "Warm", -2, -2.75),  # Sample sizes
-                  label = paste0("k = ", estimates, " (", studies, ")"),
-                  color = warm_cold), 
-              hjust = 1.05, size = 5, show.legend = FALSE) +
-  facet_wrap(~ trait_type, ncol = 1) +  # Different panels for each trait
-  scale_fill_manual(values = c("#06B4BA", "#E80756"))+
-  scale_color_manual(values = c("#06B4BA", "#E80756"))+
-  labs(x = "Number  of generations of selection", y = "lnRR", col = "Regime") +
-  theme_bw() + 
-  scale_size_continuous(range = c(2, 8))+ 
-  theme(text = element_text(size = 30, color = "black"),
-          legend.title = ggplot2::element_text(size = 18),
-          legend.text = ggplot2::element_text(size = 16),
-          axis.text.y = ggplot2::element_text(size = 20, 
-                colour = "black", hjust = 0.5),
-          axis.text.x = ggplot2::element_text(size = 20),
-        panel.border = element_rect(color = "black", size = 1.5),
-        strip.background = element_blank(),
-        strip.text = element_text(color = "black", size = 28),
-        plot.margin = unit(c(1.5, 0, 0, 0), "cm")) +
-    guides(fill = "none", size = "none", color = "none")+
-    coord_cartesian(ylim = c(-3.5, 3.5),
-                    xlim = c(0, 150))
+facet_limits_vr <- make_facet_limits(
+  data_points = data,
+  data_preds = emmeans_pub_year,
+  y_point = "lnRR",
+  y_lower = "lower.HPD",
+  y_upper = "upper.HPD",
+  buffer = 0.05,
+  cap = 1.6
+)
 
-################### Generations of common garden #################################
+plot_data_vr <- clip_plot_data(
+  data_points = data,
+  data_preds = emmeans_pub_year,
+  facet_limits = facet_limits_vr,
+  y_point = "lnRR",
+  y_mean = "emmean",
+  y_lower = "lower.HPD",
+  y_upper = "upper.HPD"
+)
+
+sample_sizes_vr <- make_sample_size_positions(
+  sample_sizes_df = sample_sizes,
+  facet_limits = facet_limits_vr
+)
+
+ggplot() + 
+  geom_blank(data = facet_limits_vr, aes(x = 0, y = ymin)) +
+  geom_blank(data = facet_limits_vr, aes(x = 0, y = ymax)) +
+  geom_hline(yintercept = 0, linetype = 2, colour = "black", alpha = 0.75) +  
+  geom_point(
+    data = plot_data_vr$points,
+    aes(
+      x = pub_year, 
+      y = lnRR, 
+      size = 1 / sqrt(var_lnRR), 
+      fill = warm_cold
+    ), 
+    shape = 21, 
+    alpha = 0.7, 
+    stroke = 1,
+    position = position_jitter(width = 0.05)
+  ) + 
+  geom_ribbon(
+    data = plot_data_vr$preds,
+    aes(
+      x = pub_year,
+      ymin = y_lower_plot, 
+      ymax = y_upper_plot, 
+      fill = warm_cold,
+      group = warm_cold
+    ), 
+    alpha = .5
+  ) + 
+  geom_line(
+    data = plot_data_vr$preds,
+    aes(
+      y = y_mean_plot,
+      x = pub_year,
+      color = warm_cold,
+      group = warm_cold
+    ), 
+    size = 1.5
+  ) + 
+  geom_text(
+    data = sample_sizes_vr, 
+    aes(
+      x = Inf, 
+      y = y,
+      label = paste0("k = ", estimates, " (", studies, ")"),
+      color = warm_cold
+    ), 
+    hjust = 1.05,
+    size = 5,
+    show.legend = FALSE
+  ) +
+  facet_wrap(~ trait_type, ncol = 1, scales = "free_y") +
+  scale_fill_manual(values = c("#06B4BA", "#E80756")) +
+  scale_color_manual(values = c("#06B4BA", "#E80756")) +
+  labs(
+    x = "Year of publication",
+    y = "lnRR",
+    col = "Regime"
+  ) +
+  theme_bw() + 
+  scale_size_continuous(range = c(2, 8)) + 
+  theme(
+    text = element_text(size = 25, color = "black"),
+    legend.title = ggplot2::element_text(size = 18),
+    legend.text = ggplot2::element_text(size = 16),
+    axis.text.y = ggplot2::element_text(size = 20, colour = "black", hjust = 0.5),
+    axis.text.x = ggplot2::element_text(size = 20),
+    panel.border = element_rect(color = "black", size = 1.5),
+    strip.background = element_blank(),
+    strip.text = element_text(color = "black", size = 22)
+  ) +
+  guides(fill = "none", col = "none", size = "none")
+
+ggsave(file = "fig/figure_S11.png", width = 10, height = 10, dpi = 500)
+```
+
+
+## **Figure S12** 
+
+```{r, fig.width = 12, fig.height=10}
+# Load model
+lnVR_model_pub_year <- readRDS("RData/lnVR_model_pub_bias_year.rds")
 
 # Generate predictions
-emmeans_gen_common_garden <- as.data.frame(emmeans(
-  lnVR_model_gen_common_garden,
-  specs = ~ gen_common_garden | trait_type * warm_cold,
-  at = list(gen_common_garden = seq(min(data$gen_common_garden), max(data$gen_common_garden), by = 1),
-            assay_temp_diff = 0))
-  ) # Conditional effects on assay_temp_diff = 0
+emmeans_pub_year <- as.data.frame(emmeans(
+  lnVR_model_pub_year,
+  specs = ~ pub_year | trait_type * warm_cold,
+  at = list(pub_year = seq(min(data$pub_year), max(data$pub_year), by = 1)))
+  )
 
 # Calculate range of values for each category
 range_df <- data %>%
   group_by(trait_type, warm_cold) %>%
   summarize(
-    min_gen_common_garden = min(gen_common_garden),
-    max_gen_common_garden = max(gen_common_garden)
+    min_pub_year = min(pub_year),
+    max_pub_year = max(pub_year)
   )
 
-emmeans_gen_common_garden$trait_type <- factor(emmeans_gen_common_garden$trait_type, 
+emmeans_pub_year$trait_type <- factor(emmeans_pub_year$trait_type, 
                           levels = c("body_size", "fecundity", "survival"), 
                           labels = c("Body size", "Fecundity", "Survival"))
 
-emmeans_gen_common_garden$warm_cold <- factor(emmeans_gen_common_garden$warm_cold, 
+emmeans_pub_year$warm_cold <- factor(emmeans_pub_year$warm_cold, 
                           levels = c("cold", "warm"), 
                           labels = c("Cold", "Warm"))
 
 # Tailor predictions to the range of the data
-emmeans_gen_common_garden <- emmeans_gen_common_garden %>%
+emmeans_pub_year <- emmeans_pub_year %>%
   left_join(range_df, by = c("trait_type", "warm_cold")) %>%
   filter(
-    gen_common_garden >= min_gen_common_garden,
-    gen_common_garden <= max_gen_common_garden
+    pub_year >= min_pub_year,
+    pub_year <= max_pub_year
   )
 
 # Plot
-gen_common_garden <- 
+facet_limits_vr <- make_facet_limits(
+  data_points = data,
+  data_preds = emmeans_pub_year,
+  y_point = "lnVR",
+  y_lower = "lower.HPD",
+  y_upper = "upper.HPD",
+  buffer = 0.05,
+  cap = 3.5
+)
+
+plot_data_vr <- clip_plot_data(
+  data_points = data,
+  data_preds = emmeans_pub_year,
+  facet_limits = facet_limits_vr,
+  y_point = "lnVR",
+  y_mean = "emmean",
+  y_lower = "lower.HPD",
+  y_upper = "upper.HPD"
+)
+
+sample_sizes_vr <- make_sample_size_positions(
+  sample_sizes_df = sample_sizes,
+  facet_limits = facet_limits_vr
+)
+
 ggplot() + 
+  geom_blank(data = facet_limits_vr, aes(x = 0, y = ymin)) +
+  geom_blank(data = facet_limits_vr, aes(x = 0, y = ymax)) +
+  geom_hline(yintercept = 0, linetype = 2, colour = "black", alpha = 0.75) +  
+  geom_point(
+    data = plot_data_vr$points,
+    aes(
+      x = pub_year, 
+      y = lnVR, 
+      size = 1 / sqrt(var_lnVR), 
+      fill = warm_cold
+    ), 
+    shape = 21, 
+    alpha = 0.7, 
+    stroke = 1,
+    position = position_jitter(width = 0.05)
+  ) + 
+  geom_ribbon(
+    data = plot_data_vr$preds,
+    aes(
+      x = pub_year,
+      ymin = y_lower_plot, 
+      ymax = y_upper_plot, 
+      fill = warm_cold,
+      group = warm_cold
+    ), 
+    alpha = .5
+  ) + 
+  geom_line(
+    data = plot_data_vr$preds,
+    aes(
+      y = y_mean_plot,
+      x = pub_year,
+      color = warm_cold,
+      group = warm_cold
+    ), 
+    size = 1.5
+  ) + 
+  geom_text(
+    data = sample_sizes_vr, 
+    aes(
+      x = Inf, 
+      y = y,
+      label = paste0("k = ", estimates, " (", studies, ")"),
+      color = warm_cold
+    ), 
+    hjust = 1.05,
+    size = 5,
+    show.legend = FALSE
+  ) +
+  facet_wrap(~ trait_type, ncol = 1, scales = "free_y") +
+  scale_fill_manual(values = c("#06B4BA", "#E80756")) +
+  scale_color_manual(values = c("#06B4BA", "#E80756")) +
+  labs(
+    x = "Year of publication",
+    y = "lnRR",
+    col = "Regime"
+  ) +
+  theme_bw() + 
+  scale_size_continuous(range = c(2, 8)) + 
+  theme(
+    text = element_text(size = 25, color = "black"),
+    legend.title = ggplot2::element_text(size = 18),
+    legend.text = ggplot2::element_text(size = 16),
+    axis.text.y = ggplot2::element_text(size = 20, colour = "black", hjust = 0.5),
+    axis.text.x = ggplot2::element_text(size = 20),
+    panel.border = element_rect(color = "black", size = 1.5),
+    strip.background = element_blank(),
+    strip.text = element_text(color = "black", size = 22)
+  ) +
+  guides(fill = "none", col = "none", size = "none")
+
+ggsave(file = "fig/figure_S12.png", width = 10, height = 10, dpi = 500)
+```
+
+## **Figure S13** 
+
+```{r, fig.width = 12, fig.height=15}
+# Load the list of all model outputs
+loo_lnRR <- readRDS(file = "RData/lnRR_LOO_results.rds") 
+
+# Extract data on fixed effects from each model
+loo_results_lnRR <- do.call(rbind, lapply(loo_lnRR, function(x) {
+  # Extract study_id and fixed_effects data
+  study_id <- x$study_id
+  fixed_effects <- x$fixed_effects
+  
+  # Convert row names (trait_type) to a column, remove prefix, and add study_id
+  fixed_effects <- data.frame(trait_type = sub("trait_type", "", rownames(fixed_effects)), fixed_effects)
+  fixed_effects$study_id <- study_id
+  
+  # Remove row names
+  rownames(fixed_effects) <- NULL
+  
+  return(fixed_effects)
+}))
+
+loo_results_lnRR$trait_type <- factor(loo_results_lnRR$trait_type, 
+                          levels = c("body_size", "fecundity", "survival"), 
+                          labels = c("Body size", "Fecundity", "Survival"))
+# Plot
+ggplot() +
     geom_hline(yintercept = 0, # Horizontal line
                linetype = 2, 
                colour = "black", 
-               alpha = 0.75) + 
-    geom_point(data = data,  # Effect sizes, scaled by precision
-                  aes(x = gen_common_garden, 
-                      y = lnVR, 
-                      size = 1/sqrt(var_lnVR), 
-                      fill = warm_cold), 
-                  shape = 21, 
-                  alpha = 0.7, 
-                  stroke = 1,
-                  position = position_jitter(width = 0.05)) + 
-     geom_ribbon(data = emmeans_gen_common_garden, # Shaded area for credible intervals
-                 aes(x = gen_common_garden,
-                     ymin = lower.HPD, 
-                     ymax = upper.HPD, 
-                     fill = warm_cold,
-                     group = warm_cold), 
-                 alpha = .5) + 
-     geom_line(data = emmeans_gen_common_garden, # Predicted regression line
-               aes(y = emmean,
-                   x = gen_common_garden,
-                   color = warm_cold,
-                   group = warm_cold), 
-               size = 1.5) +  
-     geom_text(data = sample_sizes, 
-              aes(x = Inf, 
-                  y = ifelse(warm_cold == "Warm", -2, -2.75),  # Sample sizes
-                  label = paste0("k = ", estimates, " (", studies, ")"),
-                  color = warm_cold), 
-              hjust = 1.05, size = 5, show.legend = FALSE) +
-  facet_wrap(~ trait_type, ncol = 1) +  # Different panels for each trait
-  scale_fill_manual(values = c("#06B4BA", "#E80756"))+
-  scale_color_manual(values = c("#06B4BA", "#E80756"))+
-  labs(x = "Number of generations of common garden", y = "", col = "Regime") +
-  theme_bw() + 
-  scale_size_continuous(range = c(2, 8))+ 
-  theme(text = element_text(size = 30, color = "black"),
-          legend.title = ggplot2::element_text(size = 18),
-          legend.text = ggplot2::element_text(size = 16),
-          axis.text.y = ggplot2::element_text(size = 20, 
+               alpha = 0.75, 
+               lwd=1) +
+    geom_errorbar(data = loo_results_lnRR,  # Plot the credible intervals in white for background
+               aes(x = study_id, 
+                   y = Estimate,
+                   ymin = Q2.5, 
+                   ymax = Q97.5,
+                   color = trait_type),
+               shape = 21,
+               size = 1,
+               width = 0.3) +
+    geom_point(data = loo_results_lnRR,
+               aes(x = study_id, 
+                   y = Estimate,
+                   fill = trait_type),
+               shape = 21,
+               size = 4, 
+               stroke = 1,
+               color="black") +
+    theme_bw() +     
+    labs(y = "lnRR", x = "") +
+    scale_fill_manual(values = c("#73B706", "#06A2BA", "#B90674"))+
+    scale_color_manual(values = c("#73B706", "#06A2BA", "#B90674")) +  
+    theme(text = element_text(size = 20, color = "black"),
+          legend.title = ggplot2::element_text(size = 16),
+          legend.text = ggplot2::element_text(size = 14),
+          axis.text.y = ggplot2::element_text(size = 10, 
                 colour = "black", hjust = 0.5),
           axis.text.x = ggplot2::element_text(size = 20),
-        panel.border = element_rect(color = "black", size = 1.5),
-        strip.background = element_blank(),
-        strip.text = element_text(color = "black", size = 28),
-        plot.margin = unit(c(1.5, 1, 0, 0.5), "cm")) +
-    guides(fill = "none", size = "none", color = "none")+
-    coord_cartesian(ylim = c(-3.5, 3.5),
-                    xlim = c(0, 11.5))
+          panel.border = element_rect(color = "black", size = 1.5),
+          strip.background = element_blank(),
+        strip.text = element_text(color = "black", size = 20)) +
+    guides(fill = "none", color = "none")+
+    coord_flip()+
+    xlim(-0.15, 0.15) +
+    facet_wrap(~trait_type, ncol = 3)+
+   scale_x_discrete(limits = rev(levels(as.factor(loo_results_lnRR$study_id)))) 
 
-##################### Initial population size ##################################
+ggsave(file = "fig/figure_S13.png", width = 12, height = 12, dpi = 500)
+``` 
+
+
+
+## **Figure S14**
+
+```{r, fig.width = 12, fig.height=15}
+# Load the list of all model outputs
+loo_lnVR <- readRDS(file = "RData/lnVR_LOO_results.rds") 
+
+# Extract data on fixed effects from each model
+loo_results_lnVR <- do.call(rbind, lapply(loo_lnVR, function(x) {
+  # Extract study_id and fixed_effects data
+  study_id <- x$study_id
+  fixed_effects <- x$fixed_effects
+  
+  # Convert row names (trait_type) to a column, remove prefix, and add study_id
+  fixed_effects <- data.frame(trait_type = sub("trait_type", "", rownames(fixed_effects)), fixed_effects)
+  fixed_effects$study_id <- study_id
+  
+  # Remove row names
+  rownames(fixed_effects) <- NULL
+  
+  return(fixed_effects)
+}))
+
+loo_results_lnVR$trait_type <- factor(loo_results_lnVR$trait_type, 
+                          levels = c("body_size", "fecundity", "survival"), 
+                          labels = c("Body size", "Fecundity", "Survival"))
+# Plot
+ggplot() +
+    geom_hline(yintercept = 0, # Horizontal line
+               linetype = 2, 
+               colour = "black", 
+               alpha = 0.75, 
+               lwd=1) +
+    geom_errorbar(data = loo_results_lnVR,  # Plot the credible intervals in white for background
+               aes(x = study_id, 
+                   y = Estimate,
+                   ymin = Q2.5, 
+                   ymax = Q97.5,
+                   color = trait_type),
+               shape = 21,
+               size = 1,
+               width = 0.3) +
+    geom_point(data = loo_results_lnVR,
+               aes(x = study_id, 
+                   y = Estimate,
+                   fill = trait_type),
+               shape = 21,
+               size = 4, 
+               stroke = 1,
+               color="black") +
+    theme_bw() +     
+    labs(y = "lnVR", x = "") +
+    scale_fill_manual(values = c("#73B706", "#06A2BA", "#B90674"))+
+    scale_color_manual(values = c("#73B706", "#06A2BA", "#B90674")) +  
+    theme(text = element_text(size = 20, color = "black"),
+          legend.title = ggplot2::element_text(size = 16),
+          legend.text = ggplot2::element_text(size = 14),
+          axis.text.y = ggplot2::element_text(size = 10, 
+                colour = "black", hjust = 0.5),
+          axis.text.x = ggplot2::element_text(size = 20),
+          panel.border = element_rect(color = "black", size = 1.5),
+          strip.background = element_blank(),
+        strip.text = element_text(color = "black", size = 20)) +
+    guides(fill = "none", color = "none")+
+    coord_flip()+
+    xlim(-0.5, 0.5) +
+    facet_wrap(~trait_type, ncol = 3)+
+   scale_x_discrete(limits = rev(levels(as.factor(loo_results_lnVR$study_id)))) 
+
+ggsave(file = "fig/figure_S14.png", width = 12, height = 12, dpi = 500)
+``` 
+
+## **Figure S15** 
+
+```{r, fig.width = 12, fig.height=10}
+# Load model
+lnRR_model_constant_increasing <- readRDS("RData/lnRR_model_constant_increasing.rds")
+
+# Data for warm selection regimes
+data_warm <- dplyr::filter(data, warm_cold == "Warm")
 
 # Generate predictions
-emmeans_pop_size <- as.data.frame(emmeans(
-  lnVR_model_pop_size,
-  specs = ~ pop_size | trait_type * warm_cold,
-  at = list(pop_size = seq(min(data$pop_size, na.rm=T), max(data$pop_size, na.rm=T), by = 50),
-            assay_temp_diff = 0))
-  ) # Conditional effects on assay_temp_diff = 0
+emmeans_assay_temp_diff <- as.data.frame(
+  emmeans(
+    lnRR_model_assay_temp_diff,
+    specs = ~ assay_temp_diff | trait_type * warm_cold,
+    at = list(
+      assay_temp_diff = seq(
+        min(data$assay_temp_diff, na.rm = TRUE),
+        max(data$assay_temp_diff, na.rm = TRUE),
+        by = 0.5
+      )
+    )
+  )
+)
 
 # Calculate range of values for each category
 range_df <- data %>%
   group_by(trait_type, warm_cold) %>%
   summarize(
-    min_pop_size = min(pop_size, na.rm=T),
-    max_pop_size = max(pop_size, na.rm=T)
+    min_assay_temp_diff = min(assay_temp_diff, na.rm = TRUE),
+    max_assay_temp_diff = max(assay_temp_diff, na.rm = TRUE),
+    .groups = "drop"
   )
 
-emmeans_pop_size$trait_type <- factor(emmeans_pop_size$trait_type, 
-                          levels = c("body_size", "fecundity", "survival"), 
-                          labels = c("Body size", "Fecundity", "Survival"))
+# Match emmeans coding to whatever is already in data
+emmeans_assay_temp_diff$trait_type <- factor(
+  emmeans_assay_temp_diff$trait_type,
+  levels = c("body_size", "fecundity", "survival"),
+  labels = c("Body size", "Fecundity", "Survival")
+)
 
-emmeans_pop_size$warm_cold <- factor(emmeans_pop_size$warm_cold, 
-                          levels = c("cold", "warm"), 
-                          labels = c("Cold", "Warm"))
+emmeans_assay_temp_diff$warm_cold <- factor(
+  emmeans_assay_temp_diff$warm_cold,
+  levels = c("cold", "warm"),
+  labels = c("Cold", "Warm")
+)
+
+data_warm$constant_increasing <- factor(data_warm$constant_increasing, 
+                          levels = c("constant", "increasing"), 
+                          labels = c("Constant", "Increasing"))
 
 # Tailor predictions to the range of the data
-emmeans_pop_size <- emmeans_pop_size %>%
-  left_join(range_df, by = c("trait_type", "warm_cold")) %>%
-  filter(
-    pop_size >= min_pop_size,
-    pop_size <= max_pop_size
-  )
-
-# Calculate sample sizes and study counts for population size
-sample_sizes_pop_size <- data %>%
-  filter(is.na(pop_size)==FALSE) %>% 
-  group_by(trait_type, warm_cold) %>%
-  summarise(
-    estimates = n(),
-    studies = n_distinct(ref)
-  )
-
-# Plot
-pop_size <- 
-ggplot() + 
-    geom_hline(yintercept = 0, # Horizontal line
-               linetype = 2, 
-               colour = "black", 
-               alpha = 0.75) + 
-    geom_point(data = data,  # Effect sizes, scaled by precision
-                  aes(x = pop_size, 
-                      y = lnVR, 
-                      size = 1/sqrt(var_lnVR), 
-                      fill = warm_cold), 
-                  shape = 21, 
-                  alpha = 0.7, 
-                  stroke = 1,
-                  position = position_jitter(width = 0.05)) + 
-     geom_ribbon(data = emmeans_pop_size, # Shaded area for credible intervals
-                 aes(x = pop_size,
-                     ymin = lower.HPD, 
-                     ymax = upper.HPD, 
-                     fill = warm_cold,
-                     group = warm_cold), 
-                 alpha = .5) + 
-     geom_line(data = emmeans_pop_size, # Predicted regression line
-               aes(y = emmean,
-                   x = pop_size,
-                   color = warm_cold,
-                   group = warm_cold), 
-               size = 1.5) +  
-     geom_text(data = sample_sizes_pop_size, 
-              aes(x = Inf, 
-                  y = ifelse(warm_cold == "Warm", -2, -2.75),  # Sample sizes
-                  label = paste0("k = ", estimates, " (", studies, ")"),
-                  color = warm_cold), 
-              hjust = 1.05, size = 5, show.legend = FALSE) +
-  facet_wrap(~ trait_type, ncol = 1) +  # Different panels for each trait
-  scale_fill_manual(values = c("#06B4BA", "#E80756"))+
-  scale_color_manual(values = c("#06B4BA", "#E80756"))+
-  labs(x = "Population size", y = "", col = "Regime") +
-  theme_bw() + 
-  scale_size_continuous(range = c(2, 8))+ 
-  theme(text = element_text(size = 30, color = "black"),
-          legend.title = ggplot2::element_text(size = 18),
-          legend.text = ggplot2::element_text(size = 16),
-          axis.text.y = ggplot2::element_text(size = 20, 
-                colour = "black", hjust = 0.5),
-          axis.text.x = ggplot2::element_text(size = 20),
-        panel.border = element_rect(color = "black", size = 1.5),
-        strip.background = element_blank(),
-        strip.text = element_text(color = "black", size = 28),
-        plot.margin = unit(c(0, 1, 0, 0.5), "cm")) +
-    guides(fill = "none", size = "none", color = "none")+
-    coord_cartesian(ylim = c(-3.5, 3.5))
-
-##################### Full model  ##################################
-
-# Generate predictions at the mean of each moderator
-emmeans_full_model <- as.data.frame(emmeans(
-  lnVR_model_all_moderators,
-  specs = ~ assay_temp_diff * select_temp_diff * gen_selection * gen_common_garden | trait_type * warm_cold,
-   at = list(assay_temp_diff = seq(min(data$assay_temp_diff), max(data$assay_temp_diff), by = 0.5)))) 
-
-
-# Calculate range of values for each category
-range_df <- data %>%
-  group_by(trait_type, warm_cold) %>%
-  summarize(
-    min_assay_temp_diff = min(assay_temp_diff),
-    max_assay_temp_diff = max(assay_temp_diff)
-  )
-
-emmeans_full_model$trait_type <- factor(emmeans_full_model$trait_type, 
-                          levels = c("body_size", "fecundity", "survival"), 
-                          labels = c("Body size", "Fecundity", "Survival"))
-
-emmeans_full_model$warm_cold <- factor(emmeans_full_model$warm_cold, 
-                          levels = c("cold", "warm"), 
-                          labels = c("Cold", "Warm"))
-
-# Tailor predictions to the range of the data
-emmeans_full_model <- emmeans_full_model%>%
+emmeans_assay_temp_diff <- emmeans_assay_temp_diff %>%
   left_join(range_df, by = c("trait_type", "warm_cold")) %>%
   filter(
     assay_temp_diff >= min_assay_temp_diff,
     assay_temp_diff <= max_assay_temp_diff
   )
 
-# Plot
+# Plot objects using helper functions
+facet_limits_rr <- make_facet_limits(
+  data_points = data,
+  data_preds = emmeans_assay_temp_diff,
+  y_point = "lnRR",
+  y_lower = "lower.HPD",
+  y_upper = "upper.HPD",
+  buffer = 0.05,
+  cap = 1.6
+)
+
+plot_data_rr <- clip_plot_data(
+  data_points = data,
+  data_preds = emmeans_assay_temp_diff,
+  facet_limits = facet_limits_rr,
+  y_point = "lnRR",
+  y_mean = "emmean",
+  y_lower = "lower.HPD",
+  y_upper = "upper.HPD"
+)
+
+sample_sizes_rr <- make_sample_size_positions(
+  sample_sizes_df = sample_sizes,
+  facet_limits = facet_limits_rr
+)
+
 ggplot() + 
+  geom_blank(data = facet_limits_rr, aes(x = 0, y = ymin)) +
+  geom_blank(data = facet_limits_rr, aes(x = 0, y = ymax)) +
+  geom_hline(yintercept = 0, linetype = 2, colour = "black", alpha = 0.75) +  
+  geom_vline(xintercept = 0, linetype = 2, colour = "black", alpha = 0.75) +  
+  geom_point(
+    data = plot_data_rr$points,
+    aes(
+      x = assay_temp_diff, 
+      y = lnRR, 
+      size = 1 / sqrt(var_lnRR), 
+      fill = warm_cold
+    ), 
+    shape = 21, 
+    alpha = 0.7, 
+    stroke = 1,
+    position = position_jitter(width = 0.05)
+  ) + 
+  geom_ribbon(
+    data = plot_data_rr$preds,
+    aes(
+      x = assay_temp_diff,
+      ymin = y_lower_plot, 
+      ymax = y_upper_plot, 
+      fill = warm_cold,
+      group = warm_cold
+    ), 
+    alpha = .5
+  ) + 
+  geom_line(
+    data = plot_data_rr$preds,
+    aes(
+      y = y_mean_plot,
+      x = assay_temp_diff,
+      color = warm_cold,
+      group = warm_cold
+    ), 
+    size = 1.5
+  ) + 
+  geom_text(
+    data = sample_sizes_rr, 
+    aes(
+      x = Inf, 
+      y = y,
+      label = paste0("k = ", estimates, " (", studies, ")"),
+      color = warm_cold
+    ), 
+    hjust = 1.05,
+    size = 5,
+    show.legend = FALSE
+  ) +
+  facet_wrap(~ trait_type, ncol = 1, scales = "free_y") +
+  scale_fill_manual(values = c("#06B4BA", "#E80756")) +
+  scale_color_manual(values = c("#06B4BA", "#E80756")) +
+  labs(
+    x = "Assay temperature difference",
+    y = "lnRR",
+    col = "Regime"
+  ) +
+  theme_bw() + 
+  scale_size_continuous(range = c(4, 10)) + 
+  theme(
+    text = element_text(size = 25, color = "black"),
+    legend.title = ggplot2::element_text(size = 18),
+    legend.text = ggplot2::element_text(size = 16),
+    axis.text.y = ggplot2::element_text(size = 20, colour = "black", hjust = 0.5),
+    axis.text.x = ggplot2::element_text(size = 20),
+    panel.border = element_rect(color = "black", size = 1.5),
+    strip.background = element_blank(),
+    strip.text = element_text(color = "black", size = 22)
+  ) +
+  guides(fill = "none", col = "none", size = "none")
+
+ggsave(file = "fig/figure_S15.png", width = 10, height = 10, dpi = 500)
+```
+
+## **Figure S16** 
+```{r, fig.width = 12, fig.height=10}
+# Load model
+lnRR_model_constant_increasing <- readRDS("RData/lnRR_model_constant_increasing.rds")
+
+# Generate predictions
+emmeans_constant_increasing <- as.data.frame(emmeans(lnRR_model_constant_increasing, 
+                                                     specs = ~ constant_increasing | trait_type,
+                                                     at = list(assay_temp_diff = 0)))
+
+emmeans_constant_increasing$trait_type <- factor(emmeans_constant_increasing$trait_type, 
+                          levels = c("body_size", "fecundity", "survival"), 
+                          labels = c("Body size", "Fecundity", "Survival"))
+
+emmeans_constant_increasing$constant_increasing <- factor(emmeans_constant_increasing$constant_increasing, 
+                          levels = c("constant", "increasing"), 
+                          labels = c("Constant", "Increasing"))
+
+# Calculate sample sizes and study counts
+sample_sizes_warm <- data_warm %>%
+  group_by(trait_type, constant_increasing) %>%
+  summarise(
+    estimates = n(),
+    studies = n_distinct(ref)
+  )
+
+# Plot
+ggplot() +
     geom_hline(yintercept = 0, # Horizontal line
                linetype = 2, 
                colour = "black", 
-               alpha = 0.75) +  
-    geom_vline(xintercept = 0, # Vertical line
-               linetype = 2, 
-               colour = "black", 
-               alpha = 0.75) + 
-    geom_point(data = data, # Effect sizes, scaled by precision
-                  aes(x = assay_temp_diff, 
-                      y = lnVR, 
-                      size = 1/sqrt(var_lnVR), 
-                      fill = warm_cold), 
-                  shape = 21, 
-                  alpha = 0.7, 
-                  stroke = 1,
-                  position = position_jitter(width = 0.05)) + 
-     geom_ribbon(data = emmeans_full_model, # Shaded area for credible intervals
-                 aes(x = assay_temp_diff,
-                     ymin = lower.HPD, 
-                     ymax = upper.HPD, 
-                     fill = warm_cold,
-                     group = warm_cold), 
-                 alpha = .5) + 
-     geom_line(data = emmeans_full_model,  # Predicted regression line
-               aes(y = emmean,
-                   x = assay_temp_diff,
-                   color = warm_cold,
-                   group = warm_cold), 
-               size = 1.5) + 
-    geom_text(data = sample_sizes, 
-              aes(x = Inf, 
-                  y = ifelse(warm_cold == "Warm", -2, -2.75),  # Sample sizes
+               alpha = 0.75, 
+               lwd=1) +
+    geom_quasirandom(data = data_warm,     # Plot effect sizes, scaled by precision
+                     aes(x = trait_type:constant_increasing, 
+                         y = lnRR, 
+                         fill = trait_type:constant_increasing, 
+                         size = 1/sqrt(var_lnRR)), 
+                     color = "black",
+                     shape = 21,
+                     width = 0.25, 
+                     alpha = 0.1) +
+    geom_errorbar(data = emmeans_constant_increasing,  # Plot the point estimates in white for background
+                  aes(x = trait_type:constant_increasing, 
+                      ymin = lower.HPD, 
+                      ymax = upper.HPD), 
+                  color="white",
+                  size = 2.5,
+                  width = 0.17) +
+    geom_point(data = emmeans_constant_increasing,  # Plot the credible intervals in white for background
+               aes(x = trait_type:constant_increasing, 
+                   y = emmean),
+               shape = 21,
+               size = 4.5, 
+               stroke = 2,
+               color="white",
+               fill = "white") +
+    geom_errorbar(data = emmeans_constant_increasing, # Plot the credible intervals
+                  aes(x = trait_type:constant_increasing, 
+                      ymin = lower.HPD, 
+                      ymax = upper.HPD), 
+                  size = 2,
+                  width = 0.15) +
+    geom_point(data = emmeans_constant_increasing, # Plot the point estimates
+               aes(x = trait_type:constant_increasing, 
+                   fill = trait_type:constant_increasing,
+                   y = emmean),
+               shape = 21,
+               size = 4, 
+               stroke = 2,
+               color="black") +
+    geom_text(data = sample_sizes_warm,  # Sample size annotations 
+              aes(x = trait_type:constant_increasing, 
+                  y = 1.5,
                   label = paste0("k = ", estimates, " (", studies, ")"),
-                  color = warm_cold), 
-              hjust = 1.05, size = 5, show.legend = FALSE) +
-  
-  facet_wrap(~ trait_type, ncol = 1) + # Different panels for each trait
-  scale_fill_manual(values = c("#06B4BA", "#E80756"))+
-  scale_color_manual(values = c("#06B4BA", "#E80756"))+
-  labs(x = "Assay temperature difference", y = "lnVR",
-       col = "Regime") +
-  theme_bw() + 
-  scale_size_continuous(range = c(2, 8))+ 
-  theme(text = element_text(size = 30, color = "black"),
-          legend.title = ggplot2::element_text(size = 18),
-          legend.text = ggplot2::element_text(size = 16),
+                  color = constant_increasing), 
+              hjust = 1, size = 5, show.legend = FALSE) +
+    theme_bw() +     # Customize the plot
+    labs(y = "lnRR", x = "") +
+    scale_size_continuous(range = c(2, 8))+ 
+    scale_fill_manual(values = c("#8E77FF", "#FF6040", "#8E77FF", "#FF6040", "#8E77FF", "#FF6040"))+
+    scale_color_manual(values = c("Constant" = "#8E77FF", "Increasing" = "#FF6040")) +  # Text colour
+    theme(text = element_text(size = 20, color = "black"),
+          legend.title = ggplot2::element_text(size = 16),
+          legend.text = ggplot2::element_text(size = 14),
           axis.text.y = ggplot2::element_text(size = 20, 
                 colour = "black", hjust = 0.5),
           axis.text.x = ggplot2::element_text(size = 20),
-        panel.border = element_rect(color = "black", size = 1.5),
-        strip.background = element_blank(),
-        strip.text = element_text(color = "black", size = 28)) +
+          panel.border = element_rect(color = "black", size = 1.5)) +
     guides(fill = "none", size = "none")+
-    coord_cartesian(ylim = c(-3.5, 3.5))
+    coord_flip() + 
+    ylim(-1.6, 1.6)
 
-assay_temp / (sel_temp_diff | pop_size) / (gen_selection | gen_common_garden)
-
-ggsave(file = "fig/figure_6.png", width = 20, height = 32, dpi = 500)
+ggsave(file = "fig/figure_S16.png", width = 12, height = 7, dpi = 500)
 ```
 
-## **Figure S1**
+## **Figure S17** 
+```{r, fig.width = 12, fig.height=10}
+# Load model
+lnVR_model_constant_increasing <- readRDS("RData/lnVR_model_constant_increasing.rds")
 
-# **Package information** 
+# Generate predictions
+emmeans_constant_increasing <- as.data.frame(emmeans(lnVR_model_constant_increasing, 
+                                                     specs = ~ constant_increasing | trait_type,
+                                                     at = list(assay_temp_diff = 0)))
+
+emmeans_constant_increasing$trait_type <- factor(emmeans_constant_increasing$trait_type, 
+                          levels = c("body_size", "fecundity", "survival"), 
+                          labels = c("Body size", "Fecundity", "Survival"))
+
+emmeans_constant_increasing$constant_increasing <- factor(emmeans_constant_increasing$constant_increasing, 
+                          levels = c("constant", "increasing"), 
+                          labels = c("Constant", "Increasing"))
+
+# Calculate sample sizes and study counts
+sample_sizes_warm <- data_warm %>%
+  group_by(trait_type, constant_increasing) %>%
+  summarise(
+    estimates = n(),
+    studies = n_distinct(ref)
+  )
+
+# Plot
+ggplot() +
+    geom_hline(yintercept = 0, # Horizontal line
+               linetype = 2, 
+               colour = "black", 
+               alpha = 0.75, 
+               lwd=1) +
+    geom_quasirandom(data = data_warm,     # Plot effect sizes, scaled by precision
+                     aes(x = trait_type:constant_increasing, 
+                         y = lnVR, 
+                         fill = trait_type:constant_increasing, 
+                         size = 1/sqrt(var_lnVR)), 
+                     color = "black",
+                     shape = 21,
+                     width = 0.25, 
+                     alpha = 0.1) +
+    geom_errorbar(data = emmeans_constant_increasing,  # Plot the point estimates in white for background
+                  aes(x = trait_type:constant_increasing, 
+                      ymin = lower.HPD, 
+                      ymax = upper.HPD), 
+                  color="white",
+                  size = 2.5,
+                  width = 0.17) +
+    geom_point(data = emmeans_constant_increasing,  # Plot the credible intervals in white for background
+               aes(x = trait_type:constant_increasing, 
+                   y = emmean),
+               shape = 21,
+               size = 4.5, 
+               stroke = 2,
+               color="white",
+               fill = "white") +
+    geom_errorbar(data = emmeans_constant_increasing, # Plot the credible intervals
+                  aes(x = trait_type:constant_increasing, 
+                      ymin = lower.HPD, 
+                      ymax = upper.HPD), 
+                  size = 2,
+                  width = 0.15) +
+    geom_point(data = emmeans_constant_increasing, # Plot the point estimates
+               aes(x = trait_type:constant_increasing, 
+                   fill = trait_type:constant_increasing,
+                   y = emmean),
+               shape = 21,
+               size = 4, 
+               stroke = 2,
+               color="black") +
+    geom_text(data = sample_sizes_warm,  # Sample size annotations 
+              aes(x = trait_type:constant_increasing, 
+                  y = 3,
+                  label = paste0("k = ", estimates, " (", studies, ")"),
+                  color = constant_increasing), 
+              hjust = 1, size = 5, show.legend = FALSE) +
+    theme_bw() +     # Customize the plot
+    labs(y = "lnVR", x = "") +
+    scale_size_continuous(range = c(2, 8))+ 
+    scale_fill_manual(values = c("#8E77FF", "#FF6040", "#8E77FF", "#FF6040", "#8E77FF", "#FF6040"))+
+    scale_color_manual(values = c("Constant" = "#8E77FF", "Increasing" = "#FF6040")) +  # Text colour
+    theme(text = element_text(size = 20, color = "black"),
+          legend.title = ggplot2::element_text(size = 16),
+          legend.text = ggplot2::element_text(size = 14),
+          axis.text.y = ggplot2::element_text(size = 20, 
+                colour = "black", hjust = 0.5),
+          axis.text.x = ggplot2::element_text(size = 20),
+          panel.border = element_rect(color = "black", size = 1.5)) +
+    guides(fill = "none", size = "none")+
+    coord_flip() + 
+    ylim(-3, 3)
+
+ggsave(file = "fig/figure_S17.png", width = 12, height = 7, dpi = 500)
+```
+
+## **Figure S18** 
+
+```{r, fig.width = 12, fig.height=10}
+# Load model
+lnRR_model_concerns <- readRDS("RData/lnRR_model_concerns.rds")
+
+# Generate predictions
+emmeans_concerns <- as.data.frame(emmeans(
+  lnRR_model_concerns,
+  specs = ~ assay_temp_diff | trait_type * warm_cold,
+  at = list(assay_temp_diff = seq(min(data_concerns$assay_temp_diff), max(data_concerns$assay_temp_diff), by = 0.5)))
+  )
+
+# Calculate range of values for each category
+range_df <- data_concerns %>%
+  group_by(trait_type, warm_cold) %>%
+  summarize(
+    min_assay_temp_diff = min(assay_temp_diff, na.rm = TRUE),
+    max_assay_temp_diff = max(assay_temp_diff, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+# Match emmeans coding to whatever is already in data
+emmeans_concerns$trait_type <- factor(
+  emmeans_concerns$trait_type,
+  levels = c("body_size", "fecundity", "survival"),
+  labels = c("Body size", "Fecundity", "Survival")
+)
+
+emmeans_concerns$warm_cold <- factor(
+  emmeans_concerns$warm_cold,
+  levels = c("cold", "warm"),
+  labels = c("Cold", "Warm")
+)
+
+# Tailor predictions to the range of the data
+emmeans_concerns <- emmeans_concerns %>%
+  left_join(range_df, by = c("trait_type", "warm_cold")) %>%
+  filter(
+    assay_temp_diff >= min_assay_temp_diff,
+    assay_temp_diff <= max_assay_temp_diff
+  )
+
+# Plot objects using helper functions
+facet_limits_rr <- make_facet_limits(
+  data_points = data_concerns,
+  data_preds = emmeans_concerns,
+  y_point = "lnRR",
+  y_lower = "lower.HPD",
+  y_upper = "upper.HPD",
+  buffer = 0.05,
+  cap = 1.6
+)
+
+plot_data_rr <- clip_plot_data(
+  data_points = data_concerns,
+  data_preds = emmeans_concerns,
+  facet_limits = facet_limits_rr,
+  y_point = "lnRR",
+  y_mean = "emmean",
+  y_lower = "lower.HPD",
+  y_upper = "upper.HPD"
+)
+
+sample_sizes_rr <- make_sample_size_positions(
+  sample_sizes_df = sample_sizes,
+  facet_limits = facet_limits_rr
+)
+
+ggplot() + 
+  geom_blank(data = facet_limits_rr, aes(x = 0, y = ymin)) +
+  geom_blank(data = facet_limits_rr, aes(x = 0, y = ymax)) +
+  geom_hline(yintercept = 0, linetype = 2, colour = "black", alpha = 0.75) +  
+  geom_vline(xintercept = 0, linetype = 2, colour = "black", alpha = 0.75) +  
+  geom_point(
+    data = plot_data_rr$points,
+    aes(
+      x = assay_temp_diff, 
+      y = lnRR, 
+      size = 1 / sqrt(var_lnRR), 
+      fill = warm_cold
+    ), 
+    shape = 21, 
+    alpha = 0.7, 
+    stroke = 1,
+    position = position_jitter(width = 0.05)
+  ) + 
+  geom_ribbon(
+    data = plot_data_rr$preds,
+    aes(
+      x = assay_temp_diff,
+      ymin = y_lower_plot, 
+      ymax = y_upper_plot, 
+      fill = warm_cold,
+      group = warm_cold
+    ), 
+    alpha = .5
+  ) + 
+  geom_line(
+    data = plot_data_rr$preds,
+    aes(
+      y = y_mean_plot,
+      x = assay_temp_diff,
+      color = warm_cold,
+      group = warm_cold
+    ), 
+    size = 1.5
+  ) + 
+  geom_text(
+    data = sample_sizes_rr, 
+    aes(
+      x = Inf, 
+      y = y,
+      label = paste0("k = ", estimates, " (", studies, ")"),
+      color = warm_cold
+    ), 
+    hjust = 1.05,
+    size = 5,
+    show.legend = FALSE
+  ) +
+  facet_wrap(~ trait_type, ncol = 1, scales = "free_y") +
+  scale_fill_manual(values = c("#06B4BA", "#E80756")) +
+  scale_color_manual(values = c("#06B4BA", "#E80756")) +
+  labs(
+    x = "Assay temperature difference",
+    y = "lnRR",
+    col = "Regime"
+  ) +
+  theme_bw() + 
+  scale_size_continuous(range = c(4, 10)) + 
+  theme(
+    text = element_text(size = 25, color = "black"),
+    legend.title = ggplot2::element_text(size = 18),
+    legend.text = ggplot2::element_text(size = 16),
+    axis.text.y = ggplot2::element_text(size = 20, colour = "black", hjust = 0.5),
+    axis.text.x = ggplot2::element_text(size = 20),
+    panel.border = element_rect(color = "black", size = 1.5),
+    strip.background = element_blank(),
+    strip.text = element_text(color = "black", size = 22)
+  ) +
+  guides(fill = "none", col = "none", size = "none")
+
+ggsave(file = "fig/figure_S18.png", width = 10, height = 10, dpi = 500)
+```
+
+
+## **Figure S19** 
+
+```{r, fig.width = 12, fig.height=10}
+# Load model
+lnVR_model_concerns <- readRDS("RData/lnVR_model_concerns.rds")
+
+# Generate predictions
+emmeans_concerns <- as.data.frame(emmeans(
+  lnVR_model_concerns,
+  specs = ~ assay_temp_diff | trait_type * warm_cold,
+  at = list(assay_temp_diff = seq(min(data_concerns$assay_temp_diff), max(data_concerns$assay_temp_diff), by = 0.5)))
+  )
+
+# Calculate range of values for each category
+range_df <- data_concerns %>%
+  group_by(trait_type, warm_cold) %>%
+  summarize(
+    min_assay_temp_diff = min(assay_temp_diff, na.rm = TRUE),
+    max_assay_temp_diff = max(assay_temp_diff, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+# Match emmeans coding to whatever is already in data
+emmeans_concerns$trait_type <- factor(
+  emmeans_concerns$trait_type,
+  levels = c("body_size", "fecundity", "survival"),
+  labels = c("Body size", "Fecundity", "Survival")
+)
+
+emmeans_concerns$warm_cold <- factor(
+  emmeans_concerns$warm_cold,
+  levels = c("cold", "warm"),
+  labels = c("Cold", "Warm")
+)
+
+# Tailor predictions to the range of the data
+emmeans_concerns <- emmeans_concerns %>%
+  left_join(range_df, by = c("trait_type", "warm_cold")) %>%
+  filter(
+    assay_temp_diff >= min_assay_temp_diff,
+    assay_temp_diff <= max_assay_temp_diff
+  )
+
+# Plot objects using helper functions
+facet_limits_vr <- make_facet_limits(
+  data_points = data_concerns,
+  data_preds = emmeans_concerns,
+  y_point = "lnVR",
+  y_lower = "lower.HPD",
+  y_upper = "upper.HPD",
+  buffer = 0.05,
+  cap = 3.5
+)
+
+plot_data_vr <- clip_plot_data(
+  data_points = data_concerns,
+  data_preds = emmeans_concerns,
+  facet_limits = facet_limits_vr,
+  y_point = "lnVR",
+  y_mean = "emmean",
+  y_lower = "lower.HPD",
+  y_upper = "upper.HPD"
+)
+
+sample_sizes_vr <- make_sample_size_positions(
+  sample_sizes_df = sample_sizes,
+  facet_limits = facet_limits_vr
+)
+
+ggplot() + 
+  geom_blank(data = facet_limits_vr, aes(x = 0, y = ymin)) +
+  geom_blank(data = facet_limits_vr, aes(x = 0, y = ymax)) +
+  geom_hline(yintercept = 0, linetype = 2, colour = "black", alpha = 0.75) +  
+  geom_vline(xintercept = 0, linetype = 2, colour = "black", alpha = 0.75) +  
+  geom_point(
+    data = plot_data_vr$points,
+    aes(
+      x = assay_temp_diff, 
+      y = lnVR, 
+      size = 1 / sqrt(var_lnVR), 
+      fill = warm_cold
+    ), 
+    shape = 21, 
+    alpha = 0.7, 
+    stroke = 1,
+    position = position_jitter(width = 0.05)
+  ) + 
+  geom_ribbon(
+    data = plot_data_vr$preds,
+    aes(
+      x = assay_temp_diff,
+      ymin = y_lower_plot, 
+      ymax = y_upper_plot, 
+      fill = warm_cold,
+      group = warm_cold
+    ), 
+    alpha = .5
+  ) + 
+  geom_line(
+    data = plot_data_vr$preds,
+    aes(
+      y = y_mean_plot,
+      x = assay_temp_diff,
+      color = warm_cold,
+      group = warm_cold
+    ), 
+    size = 1.5
+  ) + 
+  geom_text(
+    data = sample_sizes_vr, 
+    aes(
+      x = Inf, 
+      y = y,
+      label = paste0("k = ", estimates, " (", studies, ")"),
+      color = warm_cold
+    ), 
+    hjust = 1.05,
+    size = 5,
+    show.legend = FALSE
+  ) +
+  facet_wrap(~ trait_type, ncol = 1, scales = "free_y") +
+  scale_fill_manual(values = c("#06B4BA", "#E80756")) +
+  scale_color_manual(values = c("#06B4BA", "#E80756")) +
+  labs(
+    x = "Assay temperature difference",
+    y = "lnVR",
+    col = "Regime"
+  ) +
+  theme_bw() + 
+  scale_size_continuous(range = c(4, 10)) + 
+  theme(
+    text = element_text(size = 25, color = "black"),
+    legend.title = ggplot2::element_text(size = 18),
+    legend.text = ggplot2::element_text(size = 16),
+    axis.text.y = ggplot2::element_text(size = 20, colour = "black", hjust = 0.5),
+    axis.text.x = ggplot2::element_text(size = 20),
+    panel.border = element_rect(color = "black", size = 1.5),
+    strip.background = element_blank(),
+    strip.text = element_text(color = "black", size = 22)
+  ) +
+  guides(fill = "none", col = "none", size = "none")
+
+ggsave(file = "fig/figure_S19.png", width = 10, height = 10, dpi = 500)
+```
+
+
+# **Package versions** 
 
 ```{r}
 sessionInfo()
