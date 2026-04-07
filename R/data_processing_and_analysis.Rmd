@@ -9988,7 +9988,7 @@ ggplot() +
   ) +
   guides(fill = "none",  size = "none")
 
-ggsave(file = "fig/figure_S7.png", width = 10, height = 11, dpi = 500)
+ggsave(file = "fig/figure_S7.png", width = 12, height = 10, dpi = 500)
 ```
 
 
