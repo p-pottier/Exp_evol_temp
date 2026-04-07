@@ -10786,7 +10786,7 @@ emmeans_pub_year <- emmeans_pub_year %>%
   )
 
 # Plot
-facet_limits_vr <- make_facet_limits(
+facet_limits_rr <- make_facet_limits(
   data_points = data,
   data_preds = emmeans_pub_year,
   y_point = "lnRR",
@@ -10796,29 +10796,29 @@ facet_limits_vr <- make_facet_limits(
   cap = 1.6
 )
 
-plot_data_vr <- clip_plot_data(
+plot_data_rr <- clip_plot_data(
   data_points = data,
   data_preds = emmeans_pub_year,
-  facet_limits = facet_limits_vr,
+  facet_limits = facet_limits_rr,
   y_point = "lnRR",
   y_mean = "emmean",
   y_lower = "lower.HPD",
   y_upper = "upper.HPD"
 )
 
-sample_sizes_vr <- make_sample_size_positions(
+sample_sizes_rr <- make_sample_size_positions(
   sample_sizes_df = sample_sizes,
-  facet_limits = facet_limits_vr
+  facet_limits = facet_limits_rr
 )
 
 min_pub_year <- min(data$pub_year, na.rm = TRUE)
 
 ggplot() + 
-  geom_blank(data = facet_limits_vr, aes(x = min_pub_year, y = ymin)) +
-  geom_blank(data = facet_limits_vr, aes(x = min_pub_year, y = ymax)) +
+  geom_blank(data = facet_limits_rr, aes(x = min_pub_year, y = ymin)) +
+  geom_blank(data = facet_limits_rr, aes(x = min_pub_year, y = ymax)) +
   geom_hline(yintercept = 0, linetype = 2, colour = "black", alpha = 0.75) +  
   geom_point(
-    data = plot_data_vr$points,
+    data = plot_data_rr$points,
     aes(
       x = pub_year, 
       y = lnRR, 
@@ -10831,7 +10831,7 @@ ggplot() +
     position = position_jitter(width = 0.05)
   ) + 
   geom_ribbon(
-    data = plot_data_vr$preds,
+    data = plot_data_rr$preds,
     aes(
       x = pub_year,
       ymin = y_lower_plot, 
@@ -10842,7 +10842,7 @@ ggplot() +
     alpha = .5
   ) + 
   geom_line(
-    data = plot_data_vr$preds,
+    data = plot_data_rr$preds,
     aes(
       y = y_mean_plot,
       x = pub_year,
@@ -10852,7 +10852,7 @@ ggplot() +
     size = 1.5
   ) + 
   geom_text(
-    data = sample_sizes_vr, 
+    data = sample_sizes_rr, 
     aes(
       x = Inf, 
       y = y,
@@ -10885,7 +10885,7 @@ ggplot() +
   ) +
   guides(fill = "none",  size = "none")
 
-ggsave(file = "fig/figure_S11.png", width = 10, height = 10, dpi = 500)
+ggsave(file = "fig/figure_S11.png", width = 12, height = 10, dpi = 500)
 ```
 
 
