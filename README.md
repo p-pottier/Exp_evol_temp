@@ -1,12 +1,12 @@
 # **Weak meta-analytic evidence for the evolution of  body size, fecundity, and survival in changing thermal environments**
 
-This repository contains the data and code to reproduce the results from Pottier et al. (2025). Weak meta-analytic evidence for the evolution of   body size, fecundity, and survival in changing thermal environments. *In prep* 
+This repository contains the data and code to reproduce the results from Pottier et al. (2026). Weak meta-analytic evidence for the evolution of body size, fecundity, and survival in changing thermal environments. *In prep* 
 
 A rendered version of the code is available in R/data_processing_and_analysis.html, or this webpage: https://p-pottier.github.io/Exp_evol_temp/. This document contains headers and tabs to help navigate through the code. On the left hand side, you also have a toggle to change from dark to light theme.
 
-Importantly, note that this repository does not contain model outputs (RData/ folder). This is because the model outputs were too large to be shared in Github, but please contact *p.pottier@unsw.edu.au* if you would like access to some of these files. Note also that his code requires large computational power and all statistical models ran on the computational cluster *Katana* supported by Research Technology Services at UNSW Sydney (https://research.unsw.edu.au/katana). The R code needed to run these models are provided in the R/ folder, and the resouces required to run each R file are provided in the pbs/ folder. These resources can be adapted for different supercomputers. 
+Importantly, note that this repository does not contain model outputs (RData/ folder). This is because the model outputs were too large to be shared in Github, but please contact *patrice.pottier@bioenv.gu.se* if you would like access to some of these files. Note also that his code requires large computational power and all statistical models ran on the computational cluster *Katana* supported by Research Technology Services at UNSW Sydney (https://research.unsw.edu.au/katana). The R code needed to run these models are provided in the R/ folder, and the resouces required to run each R file are provided in the pbs/ folder. These resources can be adapted for different supercomputers. 
 
-If you need any assistance with the data and code, or identify a mistake, please feel free to contact Patrice Pottier at *p.pottier@unsw.edu.au* 
+If you need any assistance with the data and code, or identify a mistake, please feel free to contact Patrice Pottier at *patrice.pottier@bioenv.gu.se* 
 
 ------------
 
