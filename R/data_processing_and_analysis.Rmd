@@ -18,52 +18,13 @@ editor_options:
 ---
 
 
-<style type="text/css">
-
-/* Adjust the title area */
-.title {
-    max-width: 140% !important;
-    width: 140% !important;
-}
-
-/* Position the TOC on the left */
-#toc {
-    position: fixed !important;
-    top: 0 !important;
-    left: 100px !important;
-    right: -200px !important;
-    overflow-y: auto !important;
-    padding-top: 50px !important;
-    z-index: 1000 !important; 
-}
-
-/* Position the theme switch button to the bottom left */
-.dark-theme-toggler {
-    position: fixed !important;
-    bottom: -150px !important; 
-    left: 100px !important;  
-    z-index: 500 !important; 
-}
-
-/* Adjust the main content area */
-.page-content {
-    max-width: 140% !important; 
-    width: 140% !important;
-}
-
-/* Adjust the width of code blocks */
-pre, code, pre code {
-    max-width: 100% !important;
-    width: 100% !important;
-}
-
-/* The table of contents */
+<style>
 #toc ul.nav li ul li {
     display: none;
     max-height: none;
 }
 
-#toc ul.nav li.active ul li {
+#toc ul.nav li.active ul li  {
     display: block;
     max-height: none;
 }
@@ -78,26 +39,20 @@ pre, code, pre code {
     display: block !important;
 }
 
-/* Header colors */
 h1, h2, h3, h4, h5, h6 {
     color: deeppink !important;
 }
 
-/* Adjust font sizes in the TOC */
-
-/* Top-level items */
-#toc ul.nav > li > a {
-    font-size: 25px !important;
+table {
+    background-color: white !important;
 }
 
-/* Second-level items */
-#toc ul.nav li ul li > a {
-    font-size: 20px !important;
+thead {
+    background-color: white !important;
 }
 
-/* Third-level items */
-#toc ul.nav li ul li ul li > a {
-    font-size: 18px !important;
+tbody tr {
+    background-color: white !important;
 }
 
 </style>
@@ -107,7 +62,7 @@ h1, h2, h3, h4, h5, h6 {
 knitr::opts_chunk$set(
   message = FALSE,
   warning = FALSE, 
-  tidy = TRUE,
+  tidy = FALSE,
   cache = TRUE,
   echo=TRUE
 )
@@ -2971,7 +2926,7 @@ lnCVR_model_gen_common_garden <- readRDS("RData/lnCVR_model_gen_common_garden.rd
 summary(lnCVR_model_gen_common_garden)
 
 # R2
-r2(lnCVR_model_warm_gen_common_garden)
+r2(lnCVR_model_gen_common_garden)
 
 # Cleaned model output
 as.data.frame(fixef(lnCVR_model_gen_common_garden, summary = TRUE)) %>%
@@ -7302,7 +7257,7 @@ lnVR_model_constant_increasing <- readRDS("RData/lnVR_model_constant_increasing.
 summary(lnVR_model_constant_increasing)
 
 # R2
-r2(lnVR_model_pub_constant_increasing)
+r2(lnVR_model_constant_increasing)
 
 # Cleaned model output
 as.data.frame(fixef(lnVR_model_constant_increasing, summary = TRUE)) %>%
@@ -7406,7 +7361,7 @@ ggplot() +
     labs(y = "lnVR", x = "") +
     scale_size_continuous(range = c(2, 8))+ 
     scale_fill_manual(values = c("#8E77FF", "#FF6040", "#8E77FF", "#FF6040", "#8E77FF", "#FF6040"))+
-    scale_color_manual(values = c("Constant" = "#8E77FF", "Increasing" = "#FF6040")) +  # Text colour
+    scale_color_manual(values = c("Constant" = "#8E77FF", "Increasing" = "#FF6040")) +
     theme(text = element_text(size = 20, color = "black"),
           legend.title = ggplot2::element_text(size = 16),
           legend.text = ggplot2::element_text(size = 14),
@@ -7951,7 +7906,7 @@ barplot <- ggplot(species_summary, aes(x = tip.label,
 
 tree_plot | barplot
 
-ggsave(file = "fig/figure_2.png", width = 12, height = 10, dpi = 500)
+ggsave(file = "fig/figure_2.svg", width = 12, height = 10, dpi = 500)
 
 ```
 
@@ -9367,7 +9322,7 @@ Figure S1 and S2 were made in Powerpoint.
 
 ## **Figure S3**
 
-```{r}
+```{r, fig.height = 13, fig.width = 15}
 # Prepare data
 plot_dat <- data %>%
   dplyr::mutate(
@@ -9416,9 +9371,7 @@ plot_dat <- plot_dat %>%
 
 # Plot
 p <- ggplot() +
-  
   geom_vline(xintercept = 0, linetype = "dashed", colour = "grey40") +
-  
   ggbeeswarm::geom_quasirandom(
     data = plot_dat,
     aes(
@@ -9435,42 +9388,11 @@ p <- ggplot() +
     stroke = 0.2,
     orientation = "x"
   ) +
-  # 
-  # geom_errorbar(   ##### Add this part to visualise mean effects per study
-  #   data = study_sum,
-  #   aes(
-  #     y = ref_facet,
-  #     xmin = lower_CI,
-  #     xmax = upper_CI,
-  #     colour = warm_cold
-  #   ),
-  #   width = 0.25,
-  #   linewidth = 1.5,
-  #   position = position_dodge(width = 0.55),
-  #   orientation = "y"
-  # ) +
-  # 
-  # geom_point(
-  #   data = study_sum,
-  #   aes(
-  #     x = mean_lnRR,
-  #     y = ref_facet,
-  #     colour = warm_cold,
-  #     fill = warm_cold
-  #   ),
-  #   size = 4,
-  #   shape = 21,
-  #   stroke = 0.35,
-  #   position = position_dodge(width = 0.55)
-  # ) +
-  
   facet_wrap(~trait_type, ncol = 3, scales = "free") +
   tidytext::scale_y_reordered() +
-  
   scale_fill_manual(values = c("#06B4BA", "#E80756")) +
   scale_color_manual(values = c("#06B4BA", "#E80756")) +
   scale_size_continuous(range = c(2.5, 8), guide = "none") +
-  
   labs(
     x = "Effect size (lnRR)",
     y = NULL,
@@ -9634,7 +9556,7 @@ ggplot() +
     strip.background = element_blank(),
     strip.text = element_text(color = "black", size = 22)
   ) +
-  guides(fill = "none", col = "none", size = "none")
+  guides(fill = "none",  size = "none")
 
 ggsave(file = "fig/figure_S4.png", width = 12, height = 10, dpi = 500)
 ```
@@ -9778,7 +9700,7 @@ ggplot() +
     strip.background = element_blank(),
     strip.text = element_text(color = "black", size = 22)
   ) +
-  guides(fill = "none", col = "none", size = "none")
+  guides(fill = "none", size = "none")
 
 ggsave(file = "fig/figure_S5.png", width = 12, height = 10, dpi = 500)
 ```
@@ -9923,7 +9845,7 @@ ggplot() +
     strip.background = element_blank(),
     strip.text = element_text(color = "black", size = 22)
   ) +
-  guides(fill = "none", col = "none", size = "none")
+  guides(fill = "none",  size = "none")
 
 ggsave(file = "fig/figure_S6.png", width = 12, height = 10, dpi = 500)
 ```
@@ -10064,9 +9986,9 @@ ggplot() +
     strip.background = element_blank(),
     strip.text = element_text(color = "black", size = 22)
   ) +
-  guides(fill = "none", col = "none", size = "none")
+  guides(fill = "none",  size = "none")
 
-ggsave(file = "fig/figure_S7.png", width = 10, height = 10, dpi = 500)
+ggsave(file = "fig/figure_S7.png", width = 10, height = 11, dpi = 500)
 ```
 
 
@@ -10745,7 +10667,7 @@ ggplot() +
     guides(fill = "none", size = "none")+
     coord_cartesian(ylim = c(-1.5, 1.5), xlim = c(0, 0.3))
 
-ggsave(file = "fig/figure_S9.png", width = 10, height = 10, dpi = 500)
+ggsave(file = "fig/figure_S9.png", width = 12, height = 10, dpi = 500)
 ```
 
 
@@ -10823,7 +10745,7 @@ ggplot() +
     guides(fill = "none", size = "none")+
     coord_cartesian(ylim = c(-3.5, 3.5), xlim = c(0, 6))
 
-ggsave(file = "fig/figure_S10.png", width = 10, height = 10, dpi = 500)
+ggsave(file = "fig/figure_S10.png", width = 12, height = 10, dpi = 500)
 ```
 
 ## **Figure S11** 
@@ -10889,9 +10811,11 @@ sample_sizes_vr <- make_sample_size_positions(
   facet_limits = facet_limits_vr
 )
 
+min_pub_year <- min(data$pub_year, na.rm = TRUE)
+
 ggplot() + 
-  geom_blank(data = facet_limits_vr, aes(x = 0, y = ymin)) +
-  geom_blank(data = facet_limits_vr, aes(x = 0, y = ymax)) +
+  geom_blank(data = facet_limits_vr, aes(x = min_pub_year, y = ymin)) +
+  geom_blank(data = facet_limits_vr, aes(x = min_pub_year, y = ymax)) +
   geom_hline(yintercept = 0, linetype = 2, colour = "black", alpha = 0.75) +  
   geom_point(
     data = plot_data_vr$points,
@@ -10959,7 +10883,7 @@ ggplot() +
     strip.background = element_blank(),
     strip.text = element_text(color = "black", size = 22)
   ) +
-  guides(fill = "none", col = "none", size = "none")
+  guides(fill = "none",  size = "none")
 
 ggsave(file = "fig/figure_S11.png", width = 10, height = 10, dpi = 500)
 ```
@@ -11028,9 +10952,11 @@ sample_sizes_vr <- make_sample_size_positions(
   facet_limits = facet_limits_vr
 )
 
+min_pub_year <- min(data$pub_year, na.rm = TRUE)
+
 ggplot() + 
-  geom_blank(data = facet_limits_vr, aes(x = 0, y = ymin)) +
-  geom_blank(data = facet_limits_vr, aes(x = 0, y = ymax)) +
+  geom_blank(data = facet_limits_vr, aes(x = min_pub_year, y = ymin)) +
+  geom_blank(data = facet_limits_vr, aes(x = min_pub_year, y = ymax)) +
   geom_hline(yintercept = 0, linetype = 2, colour = "black", alpha = 0.75) +  
   geom_point(
     data = plot_data_vr$points,
@@ -11098,9 +11024,9 @@ ggplot() +
     strip.background = element_blank(),
     strip.text = element_text(color = "black", size = 22)
   ) +
-  guides(fill = "none", col = "none", size = "none")
+  guides(fill = "none",  size = "none")
 
-ggsave(file = "fig/figure_S12.png", width = 10, height = 10, dpi = 500)
+ggsave(file = "fig/figure_S12.png", width = 12, height = 10, dpi = 500)
 ```
 
 ## **Figure S13** 
@@ -11402,9 +11328,9 @@ ggplot() +
     strip.background = element_blank(),
     strip.text = element_text(color = "black", size = 22)
   ) +
-  guides(fill = "none", col = "none", size = "none")
+  guides(fill = "none",  size = "none")
 
-ggsave(file = "fig/figure_S15.png", width = 10, height = 10, dpi = 500)
+ggsave(file = "fig/figure_S15.png", width = 12, height = 10, dpi = 500)
 ```
 
 ## **Figure S16** 
@@ -11739,9 +11665,9 @@ ggplot() +
     strip.background = element_blank(),
     strip.text = element_text(color = "black", size = 22)
   ) +
-  guides(fill = "none", col = "none", size = "none")
+  guides(fill = "none",  size = "none")
 
-ggsave(file = "fig/figure_S18.png", width = 10, height = 10, dpi = 500)
+ggsave(file = "fig/figure_S18.png", width = 12, height = 10, dpi = 500)
 ```
 
 
@@ -11885,9 +11811,9 @@ ggplot() +
     strip.background = element_blank(),
     strip.text = element_text(color = "black", size = 22)
   ) +
-  guides(fill = "none", col = "none", size = "none")
+  guides(fill = "none",  size = "none")
 
-ggsave(file = "fig/figure_S19.png", width = 10, height = 10, dpi = 500)
+ggsave(file = "fig/figure_S19.png", width = 12, height = 10, dpi = 500)
 ```
 
 
