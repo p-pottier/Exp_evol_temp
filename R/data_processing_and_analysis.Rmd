@@ -9404,7 +9404,7 @@ theme(
   strip.background = element_blank(),
   strip.text = element_text(face = "bold", size = 18),
   axis.text.x = element_text(size = 16),              
-  axis.text.y = element_text(size = 12, angle = 1, hjust = 1), 
+  axis.text.y = element_text(size = 12,hjust = 1), 
   axis.title.x = element_text(size = 18),         
   panel.border = element_rect(colour = "black", fill = NA, linewidth = 1.2),  
   legend.position = c(0.05,0.96),
@@ -11054,6 +11054,18 @@ loo_results_lnRR <- do.call(rbind, lapply(loo_lnRR, function(x) {
 loo_results_lnRR$trait_type <- factor(loo_results_lnRR$trait_type, 
                           levels = c("body_size", "fecundity", "survival"), 
                           labels = c("Body size", "Fecundity", "Survival"))
+
+loo_results_lnRR <- loo_results_lnRR %>%
+  mutate(
+   study_id = case_when(
+      study_id == "Hallsson_et_al_2012_2" ~ "Hallson_et_al_2012",
+      study_id == "Gibbin_et_al_2017_1" ~ "Gibbin_et_al_2017a",
+      study_id == "Gibbin_et_al_2017_2" ~ "Gibbin_et_al_2017b",
+      study_id == "Partridge_et_al_1994" ~ "Partridge_et_al_1994a",
+      TRUE ~ study_id
+    )
+  )
+
 # Plot
 ggplot() +
     geom_hline(yintercept = 0, # Horizontal line
@@ -11097,7 +11109,7 @@ ggplot() +
     facet_wrap(~trait_type, ncol = 3)+
    scale_x_discrete(limits = rev(levels(as.factor(loo_results_lnRR$study_id)))) 
 
-ggsave(file = "fig/figure_S13.png", width = 12, height = 12, dpi = 500)
+ggsave(file = "fig/figure_S13.png", width = 14, height = 12, dpi = 500)
 ``` 
 
 
@@ -11127,6 +11139,18 @@ loo_results_lnVR <- do.call(rbind, lapply(loo_lnVR, function(x) {
 loo_results_lnVR$trait_type <- factor(loo_results_lnVR$trait_type, 
                           levels = c("body_size", "fecundity", "survival"), 
                           labels = c("Body size", "Fecundity", "Survival"))
+
+loo_results_lnVR <- loo_results_lnVR %>%
+  mutate(
+   study_id = case_when(
+      study_id == "Hallsson_et_al_2012_2" ~ "Hallson_et_al_2012",
+      study_id == "Gibbin_et_al_2017_1" ~ "Gibbin_et_al_2017a",
+      study_id == "Gibbin_et_al_2017_2" ~ "Gibbin_et_al_2017b",
+      study_id == "Partridge_et_al_1994" ~ "Partridge_et_al_1994a",
+      TRUE ~ study_id
+    )
+  )
+   
 # Plot
 ggplot() +
     geom_hline(yintercept = 0, # Horizontal line
@@ -11170,170 +11194,11 @@ ggplot() +
     facet_wrap(~trait_type, ncol = 3)+
    scale_x_discrete(limits = rev(levels(as.factor(loo_results_lnVR$study_id)))) 
 
-ggsave(file = "fig/figure_S14.png", width = 12, height = 12, dpi = 500)
+ggsave(file = "fig/figure_S14.png", width = 14, height = 12, dpi = 500)
 ``` 
 
 ## **Figure S15** 
 
-```{r, fig.width = 12, fig.height=10}
-# Load model
-lnRR_model_constant_increasing <- readRDS("RData/lnRR_model_constant_increasing.rds")
-
-# Data for warm selection regimes
-data_warm <- dplyr::filter(data, warm_cold == "Warm")
-
-# Generate predictions
-emmeans_assay_temp_diff <- as.data.frame(
-  emmeans(
-    lnRR_model_assay_temp_diff,
-    specs = ~ assay_temp_diff | trait_type * warm_cold,
-    at = list(
-      assay_temp_diff = seq(
-        min(data$assay_temp_diff, na.rm = TRUE),
-        max(data$assay_temp_diff, na.rm = TRUE),
-        by = 0.5
-      )
-    )
-  )
-)
-
-# Calculate range of values for each category
-range_df <- data %>%
-  group_by(trait_type, warm_cold) %>%
-  summarize(
-    min_assay_temp_diff = min(assay_temp_diff, na.rm = TRUE),
-    max_assay_temp_diff = max(assay_temp_diff, na.rm = TRUE),
-    .groups = "drop"
-  )
-
-# Match emmeans coding to whatever is already in data
-emmeans_assay_temp_diff$trait_type <- factor(
-  emmeans_assay_temp_diff$trait_type,
-  levels = c("body_size", "fecundity", "survival"),
-  labels = c("Body size", "Fecundity", "Survival")
-)
-
-emmeans_assay_temp_diff$warm_cold <- factor(
-  emmeans_assay_temp_diff$warm_cold,
-  levels = c("cold", "warm"),
-  labels = c("Cold", "Warm")
-)
-
-data_warm$constant_increasing <- factor(data_warm$constant_increasing, 
-                          levels = c("constant", "increasing"), 
-                          labels = c("Constant", "Increasing"))
-
-# Tailor predictions to the range of the data
-emmeans_assay_temp_diff <- emmeans_assay_temp_diff %>%
-  left_join(range_df, by = c("trait_type", "warm_cold")) %>%
-  filter(
-    assay_temp_diff >= min_assay_temp_diff,
-    assay_temp_diff <= max_assay_temp_diff
-  )
-
-# Plot objects using helper functions
-facet_limits_rr <- make_facet_limits(
-  data_points = data,
-  data_preds = emmeans_assay_temp_diff,
-  y_point = "lnRR",
-  y_lower = "lower.HPD",
-  y_upper = "upper.HPD",
-  buffer = 0.05,
-  cap = 1.6
-)
-
-plot_data_rr <- clip_plot_data(
-  data_points = data,
-  data_preds = emmeans_assay_temp_diff,
-  facet_limits = facet_limits_rr,
-  y_point = "lnRR",
-  y_mean = "emmean",
-  y_lower = "lower.HPD",
-  y_upper = "upper.HPD"
-)
-
-sample_sizes_rr <- make_sample_size_positions(
-  sample_sizes_df = sample_sizes,
-  facet_limits = facet_limits_rr
-)
-
-ggplot() + 
-  geom_blank(data = facet_limits_rr, aes(x = 0, y = ymin)) +
-  geom_blank(data = facet_limits_rr, aes(x = 0, y = ymax)) +
-  geom_hline(yintercept = 0, linetype = 2, colour = "black", alpha = 0.75) +  
-  geom_vline(xintercept = 0, linetype = 2, colour = "black", alpha = 0.75) +  
-  geom_point(
-    data = plot_data_rr$points,
-    aes(
-      x = assay_temp_diff, 
-      y = lnRR, 
-      size = 1 / sqrt(var_lnRR), 
-      fill = warm_cold
-    ), 
-    shape = 21, 
-    alpha = 0.7, 
-    stroke = 1,
-    position = position_jitter(width = 0.05)
-  ) + 
-  geom_ribbon(
-    data = plot_data_rr$preds,
-    aes(
-      x = assay_temp_diff,
-      ymin = y_lower_plot, 
-      ymax = y_upper_plot, 
-      fill = warm_cold,
-      group = warm_cold
-    ), 
-    alpha = .5
-  ) + 
-  geom_line(
-    data = plot_data_rr$preds,
-    aes(
-      y = y_mean_plot,
-      x = assay_temp_diff,
-      color = warm_cold,
-      group = warm_cold
-    ), 
-    size = 1.5
-  ) + 
-  geom_text(
-    data = sample_sizes_rr, 
-    aes(
-      x = Inf, 
-      y = y,
-      label = paste0("k = ", estimates, " (", studies, ")"),
-      color = warm_cold
-    ), 
-    hjust = 1.05,
-    size = 5,
-    show.legend = FALSE
-  ) +
-  facet_wrap(~ trait_type, ncol = 1, scales = "free_y") +
-  scale_fill_manual(values = c("#06B4BA", "#E80756")) +
-  scale_color_manual(values = c("#06B4BA", "#E80756")) +
-  labs(
-    x = "Assay temperature difference",
-    y = "lnRR",
-    col = "Regime"
-  ) +
-  theme_bw() + 
-  scale_size_continuous(range = c(4, 10)) + 
-  theme(
-    text = element_text(size = 25, color = "black"),
-    legend.title = ggplot2::element_text(size = 18),
-    legend.text = ggplot2::element_text(size = 16),
-    axis.text.y = ggplot2::element_text(size = 20, colour = "black", hjust = 0.5),
-    axis.text.x = ggplot2::element_text(size = 20),
-    panel.border = element_rect(color = "black", size = 1.5),
-    strip.background = element_blank(),
-    strip.text = element_text(color = "black", size = 22)
-  ) +
-  guides(fill = "none",  size = "none")
-
-ggsave(file = "fig/figure_S15.png", width = 12, height = 10, dpi = 500)
-```
-
-## **Figure S16** 
 ```{r, fig.width = 12, fig.height=10}
 # Load model
 lnRR_model_constant_increasing <- readRDS("RData/lnRR_model_constant_increasing.rds")
@@ -11426,10 +11291,10 @@ ggplot() +
     coord_flip() + 
     ylim(-1.6, 1.6)
 
-ggsave(file = "fig/figure_S16.png", width = 12, height = 7, dpi = 500)
+ggsave(file = "fig/figure_S15.png", width = 12, height = 7, dpi = 500)
 ```
 
-## **Figure S17** 
+## **Figure S16** 
 ```{r, fig.width = 12, fig.height=10}
 # Load model
 lnVR_model_constant_increasing <- readRDS("RData/lnVR_model_constant_increasing.rds")
@@ -11522,10 +11387,10 @@ ggplot() +
     coord_flip() + 
     ylim(-3, 3)
 
-ggsave(file = "fig/figure_S17.png", width = 12, height = 7, dpi = 500)
+ggsave(file = "fig/figure_S16.png", width = 12, height = 7, dpi = 500)
 ```
 
-## **Figure S18** 
+## **Figure S17** 
 
 ```{r, fig.width = 12, fig.height=10}
 # Load model
@@ -11667,11 +11532,11 @@ ggplot() +
   ) +
   guides(fill = "none",  size = "none")
 
-ggsave(file = "fig/figure_S18.png", width = 12, height = 10, dpi = 500)
+ggsave(file = "fig/figure_S17.png", width = 12, height = 10, dpi = 500)
 ```
 
 
-## **Figure S19** 
+## **Figure S18** 
 
 ```{r, fig.width = 12, fig.height=10}
 # Load model
@@ -11813,7 +11678,7 @@ ggplot() +
   ) +
   guides(fill = "none",  size = "none")
 
-ggsave(file = "fig/figure_S19.png", width = 12, height = 10, dpi = 500)
+ggsave(file = "fig/figure_S18.png", width = 12, height = 10, dpi = 500)
 ```
 
 
