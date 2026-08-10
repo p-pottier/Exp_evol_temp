@@ -8058,7 +8058,8 @@ ggplot() +
     strip.background = element_blank(),
     strip.text = element_text(color = "black", size = 22)
   ) +
-  guides(fill = "none", col = "none", size = "none")
+  guides(fill = "none", col = "none", size = "none") + 
+  xlim(-10, 20.5)
 
 ggsave(file = "fig/figure_3.svg", width = 10, height = 10, dpi = 500)
 ```
@@ -8710,7 +8711,8 @@ ggplot() +
     strip.background = element_blank(),
     strip.text = element_text(color = "black", size = 22)
   ) +
-  guides(fill = "none", col = "none", size = "none")
+  guides(fill = "none", col = "none", size = "none") + 
+  xlim(-9.5, 20.5)
 
 ggsave(file = "fig/figure_5.svg", width = 10, height = 10, dpi = 500)
 ```

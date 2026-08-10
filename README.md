@@ -1,6 +1,6 @@
-# **Weak meta-analytic evidence for the evolution of  body size, fecundity, and survival in changing thermal environments**
+# **Life-history traits do not always evolve in response to changing thermal environments**
 
-This repository contains the data and code to reproduce the results from Pottier et al. (2026). Weak meta-analytic evidence for the evolution of body size, fecundity, and survival in changing thermal environments. *In prep* 
+This repository contains the data and code to reproduce the results from Pottier et al. (2026). Life-history traits do not always evolve in response to changing thermal environments. *EcoEvoRxiv* 
 
 A rendered version of the code is available in R/data_processing_and_analysis.html, or this webpage: https://p-pottier.github.io/Exp_evol_temp/. This document contains headers and tabs to help navigate through the code. On the left hand side, you also have a toggle to change from dark to light theme.
 
